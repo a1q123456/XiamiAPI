@@ -1,0 +1,6 @@
+[submodule "cpr"]
+	path = cpr
+	url = git@github.com:whoshuu/cpr.git
+[submodule "rapidjson"]
+	path = rapidjson
+	url = git@github.com:miloyip/rapidjson.git
