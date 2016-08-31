@@ -2,7 +2,9 @@
 // Created by jack on 16-8-15.
 //
 
+#include <cstring>
 #include "str.h"
+#include <string>
 
 xiamiapi::Str::Str(const std::string &other)
 {

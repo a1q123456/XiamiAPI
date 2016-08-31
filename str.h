@@ -5,6 +5,7 @@
 #ifndef XIAMIAPI_STR_H
 #define XIAMIAPI_STR_H
 #include "xiamiapi.h"
+#include <string>
 
 namespace xiamiapi
 {

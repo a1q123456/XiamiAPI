@@ -1,13 +1,9 @@
 #ifndef XIAMIAPI_H
 #define XIAMIAPI_H
 
-#include <fstream>
-#include <cpr/cpr.h>
-#include <rapidjson/document.h>
-#include "needvalidationexception.h"
-#include "networkexception.h"
 #include "iunknown.h"
-#include "global.h"
+
+#define XIAMIAPI_EXPORT __attribute__((__visibility__("default")))
 
 namespace xiamiapi
 {

@@ -4,7 +4,6 @@
 
 #include "xiamiapi.h"
 #include "xiamiapi_impl.h"
-#include <string>
 
 using std::string;
 
