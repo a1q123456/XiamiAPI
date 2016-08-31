@@ -42,7 +42,7 @@ if (hr == 1002UL)
 ```C++
 IGenericArray * list;
 int jonathan_lee_id = 573
-api->GetArtistHotSong(jonathan_lee_id, list);
+api->GetArtistHotSong(jonathan_lee_id, &list);
 for (unsigned long i = 0; i < list->length(); i++)
 {
   auto song_info = dynamic_cast<IXiamiSongInfo *>(list->get_element(i));
@@ -60,7 +60,7 @@ for (unsigned long i = 0; i < list->length(); i++)
 ```C++
 IGenericArray * list;
 int playlist_id = 1
-api->GetPlaylist(playlist_id, list);
+api->GetPlaylist(playlist_id, &list);
 for (unsigned long i = 0; i < list->length(); i++)
 {
   auto song_info = dynamic_cast<IXiamiPlaylistInfo *>(list->get_element(i));
