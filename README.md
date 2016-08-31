@@ -35,7 +35,7 @@ if (hr == 1002UL)
   fs.seekp(0);
   fs.write(captcha_data->c_str(), captcha_data->length());
 }
-
+hr = api->XiamiLogin("xxx@xxx.com", "password", "captcha");
 ```
 
 ### Get Artist Hot Song
