@@ -73,6 +73,7 @@ for (unsigned long i = 0; i < list->length(); i++)
 
 ```
 
+More detail avaliable in [wiki](https://github.com/a1q123456/XiamiAPI/wiki)
 
 ## TODO
 - [ ] use json pointer to get object
