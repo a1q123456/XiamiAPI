@@ -1,5 +1,5 @@
 # XiamiAPI
-A COM-like and most comprehensive xiami c++ api
+A most comprehensive xiami c++ api and COM-like 
 
 ## Compile
 ```shell
