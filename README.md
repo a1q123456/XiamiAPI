@@ -77,3 +77,4 @@ More detail avaliable in [wiki](https://github.com/a1q123456/XiamiAPI/wiki)
 
 ## TODO
 - [ ] use json pointer to get object
+- [ ] implement IUnknow->QueryInterface() and IGenericArray->GetUUID()
