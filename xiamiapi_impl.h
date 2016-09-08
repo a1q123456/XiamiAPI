@@ -50,8 +50,8 @@ struct XiamiUserInfo: public IXiamiUserInfo
     virtual const char * get_credits() const;
     virtual const char * get_level() const;
     virtual const char * get_numlevel() const;
-    virtual void Release();
-    virtual ~XiamiUserInfo();
+    virtual unsigned long Release();
+    virtual HRESULT QueryInterface(RIID riid, void** ppv);
 };
 
 struct XiamiPlaylistInfo: public IXiamiPlaylistInfo
@@ -167,7 +167,9 @@ struct XiamiPlaylistInfo: public IXiamiPlaylistInfo
 
     virtual const char *get_album_pic() const;
 
-    virtual void Release();
+    virtual unsigned long Release();
+
+    virtual HRESULT QueryInterface(RIID riid, void** ppv);
 
 };
 
@@ -225,9 +227,10 @@ struct XiamiSongInfo: public IXiamiSongInfo
 
     virtual bool get_need_pay() const;
 
-    virtual void Release();
+    virtual unsigned long Release();
 
-    virtual ~XiamiSongInfo();
+    virtual HRESULT QueryInterface(RIID riid, void** ppv);
+
 };
 
 struct XiamiCollectionInfo: public IXiamiCollectionInfo
@@ -260,9 +263,9 @@ struct XiamiCollectionInfo: public IXiamiCollectionInfo
 
     virtual const char *get_user_name() const;
 
-    virtual void Release();
+    virtual unsigned long Release();
+    virtual HRESULT QueryInterface(RIID riid, void** ppv);
 
-    virtual ~XiamiCollectionInfo();
 };
 
 struct XiamiArtistInfo: public IXiamiArtistInfo
@@ -291,9 +294,9 @@ struct XiamiArtistInfo: public IXiamiArtistInfo
 
     virtual const char *get_count_likes() const;
 
-    virtual void Release();
+    virtual unsigned long Release();
+    virtual HRESULT QueryInterface(RIID riid, void** ppv);
 
-    virtual ~XiamiArtistInfo();
 };
 
 struct XiamiArtistCategoryInfo: public IXiamiArtistCategoryInfo
@@ -318,9 +321,9 @@ struct XiamiArtistCategoryInfo: public IXiamiArtistCategoryInfo
 
     virtual const char *get_artist_name() const;
 
-    virtual void Release();
+    virtual unsigned long Release();
 
-    virtual ~XiamiArtistCategoryInfo();
+    virtual HRESULT QueryInterface(RIID riid, void** ppv);
 };
 
 struct XiamiHotSearchKeyInfo: public IXiamiHotSearchKeyInfo
@@ -340,9 +343,9 @@ struct XiamiHotSearchKeyInfo: public IXiamiHotSearchKeyInfo
 
     virtual const char *get_count() const;
 
-    virtual void Release();
+    virtual unsigned long Release();
 
-    virtual ~XiamiHotSearchKeyInfo();
+    virtual HRESULT QueryInterface(RIID riid, void** ppv);
 };
 
 struct XiamiRankInfo: public IXiamiRankInfo
@@ -365,9 +368,9 @@ struct XiamiRankInfo: public IXiamiRankInfo
 
     virtual const char *get_logo() const;
 
-    virtual void Release();
+    virtual unsigned long Release();
 
-    virtual ~XiamiRankInfo();
+    virtual HRESULT QueryInterface(RIID riid, void** ppv);
 };
 
 class XiamiAPI: public IXiamiAPI
@@ -520,9 +523,9 @@ public:
 
     virtual HRESULT GetFileContentFromUrl(const char *url, IStr **out);
 
-    virtual void Release();
+    virtual unsigned long Release();
 
-    virtual ~XiamiAPI();
+    virtual HRESULT QueryInterface(RIID riid, void ** ppv);
 };
 }
 #endif // XIAMIAPI_IMPL_H

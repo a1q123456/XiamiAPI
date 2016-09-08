@@ -492,7 +492,7 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
     {
         try
         {
-            *out = new GenericArray(GetArtistHotSong_impl(artist_id));
+            *out = new GenericArray(GetArtistHotSong_impl(artist_id), __uuidof(IXiamiSongInfo));
             return S_OK;
         }
         catch (NetworkException)
@@ -509,7 +509,7 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
     {
         try
         {
-            *out = new GenericArray(GetPlaylist_impl(id, type));
+            *out = new GenericArray(GetPlaylist_impl(id, type), __uuidof(IXiamiPlaylistInfo));
             return S_OK;
         }
         catch (NetworkException)
@@ -526,7 +526,7 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
     {
         try
         {
-            *out = new GenericArray(GetUserRecommendPlaylist_impl());
+            *out = new GenericArray(GetUserRecommendPlaylist_impl(), __uuidof(IXiamiPlaylistInfo));
             return S_OK;
         }
         catch (NetworkException)
@@ -543,7 +543,7 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
     {
         try
         {
-            *out = new GenericArray(GetRecommendPlaylist_impl());
+            *out = new GenericArray(GetRecommendPlaylist_impl(), __uuidof(IXiamiPlaylistInfo));
             return S_OK;
         }
         catch (NetworkException)
@@ -560,7 +560,7 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
     {
         try
         {
-            *out = new GenericArray(GetCollectionPlaylist_impl(collection_id));
+            *out = new GenericArray(GetCollectionPlaylist_impl(collection_id), __uuidof(IXiamiPlaylistInfo));
             return S_OK;
         }
         catch (NetworkException)
@@ -577,7 +577,7 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
     {
         try
         {
-            *out = new GenericArray(GetAlbumPlaylist_impl(album_id));
+            *out = new GenericArray(GetAlbumPlaylist_impl(album_id), __uuidof(IXiamiPlaylistInfo));
             return S_OK;
         }
         catch (NetworkException)
@@ -594,7 +594,7 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
     {
         try
         {
-            *out = new GenericArray(GetSongPlaylist_impl(song_id));
+            *out = new GenericArray(GetSongPlaylist_impl(song_id), __uuidof(IXiamiPlaylistInfo));
             return S_OK;
         }
         catch (NetworkException)
@@ -628,7 +628,7 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
     {
         try
         {
-            *out = new GenericArray(GetRecommendCollection_impl());
+            *out = new GenericArray(GetRecommendCollection_impl(), __uuidof(IXiamiCollectionInfo));
             return S_OK;
         }
         catch (NetworkException)
@@ -662,7 +662,7 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
     {
         try
         {
-            *out = new GenericArray(Search_impl(key, page, limit));
+            *out = new GenericArray(Search_impl(key, page, limit), __uuidof(IXiamiSongInfo));
             return S_OK;
         }
         catch (NetworkException)
@@ -696,7 +696,7 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
     {
         try
         {
-            *out = new GenericArray(GetArtistHotList_impl(artist_class, artist_type));
+            *out = new GenericArray(GetArtistHotList_impl(artist_class, artist_type), __uuidof(IXiamiArtistInfo));
             return S_OK;
         }
         catch (NetworkException)
@@ -713,7 +713,7 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
     {
         try
         {
-            *out = new GenericArray(GetArtistCategory_impl());
+            *out = new GenericArray(GetArtistCategory_impl(), __uuidof(IXiamiArtistCategoryInfo));
             return S_OK;
         }
         catch (NetworkException)
@@ -730,7 +730,7 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
     {
         try
         {
-            *out = new GenericArray(GetHotSearchKey_impl());
+            *out = new GenericArray(GetHotSearchKey_impl(), __uuidof(IXiamiHotSearchKeyInfo));
             return S_OK;
         }
         catch (NetworkException)
@@ -747,7 +747,7 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
     {
         try
         {
-            *out = new GenericArray(GetRankList_impl());
+            *out = new GenericArray(GetRankList_impl(), __uuidof(IXiamiRankInfo));
             return S_OK;
         }
         catch (NetworkException)
@@ -760,14 +760,16 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
         }
     }
 
-    void XiamiAPI::Release()
+    unsigned long XiamiAPI::Release()
     {
-        delete this;
+        if (--m_Ref == 0)
+        {
+            delete this;
+            return 0;
+        }
+        return 1;
     }
 
-    XiamiAPI::~XiamiAPI()
-    {
-    }
 
     HRESULT XiamiAPI::GetFileContentFromUrl(const char *url, IStr **out)
     {
@@ -786,6 +788,21 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
         }
     }
 
+    HRESULT XiamiAPI::QueryInterface(RIID riid, void **ppv)
+    {
+        if (ppv == nullptr)
+        {
+            return E_INVALIDARG;
+        }
+        if (riid == IID_IUnknown || riid == __uuidof(IXiamiAPI))
+        {
+            *ppv = (IUnknown *) this;
+            AddRef();
+            return S_OK;
+        }
+        *ppv = nullptr;
+        return E_NOINTERFACE;
+    }
 
     const char *XiamiPlaylistInfo::get_song_id() const
     {
@@ -887,9 +904,30 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
         return album_pic.c_str();
     }
 
-    void XiamiPlaylistInfo::Release()
+    unsigned long XiamiPlaylistInfo::Release()
     {
-        delete this;
+        if (--m_Ref == 0)
+        {
+            delete this;
+            return 0;
+        }
+        return 1;
+    }
+
+    HRESULT XiamiPlaylistInfo::QueryInterface(RIID riid, void **ppv)
+    {
+        if (ppv == nullptr)
+        {
+            return E_INVALIDARG;
+        }
+        if (riid == IID_IUnknown || riid == __uuidof(IXiamiPlaylistInfo))
+        {
+            *ppv = (IUnknown *) this;
+            AddRef();
+            return S_OK;
+        }
+        *ppv = nullptr;
+        return E_NOINTERFACE;
     }
 
     const char *XiamiUserInfo::get_user_id() const
@@ -932,14 +970,30 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
         return numlevel.c_str();
     }
 
-    void XiamiUserInfo::Release()
+    unsigned long XiamiUserInfo::Release()
     {
-        delete this;
+        if (--m_Ref == 0)
+        {
+            delete this;
+            return 0;
+        }
+        return 1;
     }
 
-    XiamiUserInfo::~XiamiUserInfo()
+    HRESULT XiamiUserInfo::QueryInterface(RIID riid, void **ppv)
     {
-
+        if (ppv == nullptr)
+        {
+            return E_INVALIDARG;
+        }
+        if (riid == IID_IUnknown || riid == __uuidof(IXiamiUserInfo))
+        {
+            *ppv = (IUnknown *) this;
+            AddRef();
+            return S_OK;
+        }
+        *ppv = nullptr;
+        return E_NOINTERFACE;
     }
 
     const char *XiamiSongInfo::get_song_id() const
@@ -987,15 +1041,32 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
         return need_pay;
     }
 
-    void XiamiSongInfo::Release()
+    unsigned long XiamiSongInfo::Release()
     {
-        delete this;
+        if (--m_Ref == 0)
+        {
+            delete this;
+            return 0;
+        }
+        return 1;
     }
 
-    XiamiSongInfo::~XiamiSongInfo()
+    HRESULT XiamiSongInfo::QueryInterface(RIID riid, void **ppv)
     {
-
+        if (ppv == nullptr)
+        {
+            return E_INVALIDARG;
+        }
+        if (riid == IID_IUnknown || riid == __uuidof(IXiamiSongInfo))
+        {
+            *ppv = (IUnknown *) this;
+            AddRef();
+            return S_OK;
+        }
+        *ppv = nullptr;
+        return E_NOINTERFACE;
     }
+
 
     const char *XiamiCollectionInfo::get_list_id() const
     {
@@ -1017,14 +1088,30 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
         return user_name.c_str();
     }
 
-    void XiamiCollectionInfo::Release()
+    unsigned long XiamiCollectionInfo::Release()
     {
-        delete this;
+        if (--m_Ref == 0)
+        {
+            delete this;
+            return 0;
+        }
+        return 1;
     }
 
-    XiamiCollectionInfo::~XiamiCollectionInfo()
+    HRESULT XiamiCollectionInfo::QueryInterface(RIID riid, void **ppv)
     {
-
+        if (ppv == nullptr)
+        {
+            return E_INVALIDARG;
+        }
+        if (riid == IID_IUnknown || riid == __uuidof(IXiamiCollectionInfo))
+        {
+            *ppv = (IUnknown *) this;
+            AddRef();
+            return S_OK;
+        }
+        *ppv = nullptr;
+        return E_NOINTERFACE;
     }
 
     const char *XiamiArtistInfo::get_artist_id() const
@@ -1047,15 +1134,32 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
         return count_likes.c_str();
     }
 
-    void XiamiArtistInfo::Release()
+    unsigned long XiamiArtistInfo::Release()
     {
-        delete this;
+        if (--m_Ref == 0)
+        {
+            delete this;
+            return 0;
+        }
+        return 1;
     }
 
-    XiamiArtistInfo::~XiamiArtistInfo()
+    HRESULT XiamiArtistInfo::QueryInterface(RIID riid, void **ppv)
     {
-
+        if (ppv == nullptr)
+        {
+            return E_INVALIDARG;
+        }
+        if (riid == IID_IUnknown || riid == __uuidof(IXiamiArtistInfo))
+        {
+            *ppv = (IUnknown *) this;
+            AddRef();
+            return S_OK;
+        }
+        *ppv = nullptr;
+        return E_NOINTERFACE;
     }
+
 
     const char *XiamiArtistCategoryInfo::get_artist_class() const
     {
@@ -1072,14 +1176,30 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
         return artist_name.c_str();
     }
 
-    void XiamiArtistCategoryInfo::Release()
+    unsigned long XiamiArtistCategoryInfo::Release()
     {
-        delete this;
+        if (--m_Ref == 0)
+        {
+            delete this;
+            return 0;
+        }
+        return 1;
     }
 
-    XiamiArtistCategoryInfo::~XiamiArtistCategoryInfo()
+    HRESULT XiamiArtistCategoryInfo::QueryInterface(RIID riid, void **ppv)
     {
-
+        if (ppv == nullptr)
+        {
+            return E_INVALIDARG;
+        }
+        if (riid == IID_IUnknown || riid == __uuidof(IXiamiArtistCategoryInfo))
+        {
+            *ppv = (IUnknown *) this;
+            AddRef();
+            return S_OK;
+        }
+        *ppv = nullptr;
+        return E_NOINTERFACE;
     }
 
     const char *XiamiHotSearchKeyInfo::get_key() const
@@ -1092,14 +1212,30 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
         return count.c_str();
     }
 
-    void XiamiHotSearchKeyInfo::Release()
+    unsigned long XiamiHotSearchKeyInfo::Release()
     {
-        delete this;
+        if (--m_Ref == 0)
+        {
+            delete this;
+            return 0;
+        }
+        return 1;
     }
 
-    XiamiHotSearchKeyInfo::~XiamiHotSearchKeyInfo()
+    HRESULT XiamiHotSearchKeyInfo::QueryInterface(RIID riid, void **ppv)
     {
-
+        if (ppv == nullptr)
+        {
+            return E_INVALIDARG;
+        }
+        if (riid == IID_IUnknown || riid == __uuidof(IXiamiHotSearchKeyInfo))
+        {
+            *ppv = (IUnknown *) this;
+            AddRef();
+            return S_OK;
+        }
+        *ppv = nullptr;
+        return E_NOINTERFACE;
     }
 
     const char *XiamiRankInfo::get_id() const
@@ -1117,14 +1253,30 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
         return logo.c_str();
     }
 
-    void XiamiRankInfo::Release()
+    unsigned long XiamiRankInfo::Release()
     {
-        delete this;
+        if (--m_Ref == 0)
+        {
+            delete this;
+            return 0;
+        }
+        return 1;
     }
 
-    XiamiRankInfo::~XiamiRankInfo()
+    HRESULT XiamiRankInfo::QueryInterface(RIID riid, void **ppv)
     {
-        std::cout << "aaa" << std::endl;
+        if (ppv == nullptr)
+        {
+            return E_INVALIDARG;
+        }
+        if (riid == IID_IUnknown || riid == __uuidof(IXiamiRankInfo))
+        {
+            *ppv = (IUnknown *) this;
+            AddRef();
+            return S_OK;
+        }
+        *ppv = nullptr;
+        return E_NOINTERFACE;
     }
 
 }

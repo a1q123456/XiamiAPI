@@ -17,9 +17,10 @@ namespace xiamiapi
         char* data;
         unsigned long m_length;
         unsigned long sizeof_element;
+        RIID riid;
     public:
         template <class T>
-        GenericArray(const std::vector<T> &other)
+        GenericArray(const std::vector<T> &other, RIID riid): riid(riid)
         {
 
             sizeof_element = sizeof(T);
@@ -42,7 +43,10 @@ namespace xiamiapi
 
         virtual IUnknown * get_element(unsigned long index);
         virtual unsigned long length();
-        virtual void Release();
+        virtual unsigned long Release();
+        virtual RIID ElementIID();
+
+        virtual HRESULT QueryInterface(RIID riid, void** ppv);
     };
 }
 

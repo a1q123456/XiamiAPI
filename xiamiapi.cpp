@@ -13,38 +13,5 @@ namespace xiamiapi
     {
         return new xiamiapi::XiamiAPI();
     }
-
-
-    IXiamiUserInfo::~IXiamiUserInfo()
-    {}
-
-    IXiamiAPI::~IXiamiAPI()
-    {}
-
-    IStr::~IStr()
-    {}
-
-    IGenericArray::~IGenericArray()
-    {}
-
-    IXiamiArtistCategoryInfo::~IXiamiArtistCategoryInfo()
-    {}
-
-    IXiamiRankInfo::~IXiamiRankInfo()
-    {}
-
-    IXiamiArtistInfo::~IXiamiArtistInfo()
-    {}
-
-    IXiamiCollectionInfo::~IXiamiCollectionInfo(){}
-
-    IXiamiHotSearchKeyInfo::~IXiamiHotSearchKeyInfo()
-    {}
-
-    IXiamiSongInfo::~IXiamiSongInfo()
-    {}
-
-    IXiamiPlaylistInfo::~IXiamiPlaylistInfo()
-    {}
 }
 

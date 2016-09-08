@@ -28,12 +28,8 @@ set(SOURCE_FILES
         str.h
         GenericArray.cpp
         GenericArray.h
-        iunknown.cpp
-        )
+        iunknown.cpp)
 
 add_library(xiamiapi SHARED ${SOURCE_FILES})
 
 target_link_libraries(xiamiapi ${CPR_LIBRARIES})
-
-link_libraries(${CMAKE_CURRENT_SOURCE_DIR}/build/Debug/libxiamiapi.so)
-

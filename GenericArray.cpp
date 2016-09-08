@@ -14,13 +14,39 @@ unsigned long xiamiapi::GenericArray::length()
     return m_length;
 }
 
-void xiamiapi::GenericArray::Release()
+unsigned long xiamiapi::GenericArray::Release()
 {
-    for (unsigned long i = 0; i < length(); i++)
+    if (--m_Ref == 0)
     {
-        auto tmp = get_element(i);
-        tmp->~IUnknown();
+        for (unsigned long i = 0; i < length(); i++)
+        {
+            auto tmp = get_element(i);
+            tmp->~IUnknown();
+        }
+        delete[] data;
+        delete this;
+        return 0;
     }
-    delete[] data;
-    delete this;
+    return 1;
+}
+
+HRESULT xiamiapi::GenericArray::QueryInterface(RIID riid, void **ppv)
+{
+    if (ppv == nullptr)
+    {
+        return E_INVALIDARG;
+    }
+    if (riid == IID_IUnknown || riid == __uuidof(IGenericArray))
+    {
+        *ppv = (IUnknown *) this;
+        AddRef();
+        return S_OK;
+    }
+    *ppv = nullptr;
+    return E_NOINTERFACE;
+}
+
+RIID xiamiapi::GenericArray::ElementIID()
+{
+    return riid;
 }

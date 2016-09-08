@@ -26,7 +26,11 @@ namespace xiamiapi
 
         virtual const char *get_numlevel() const = 0;
 
-        virtual ~IXiamiUserInfo() = 0;
+        constexpr static const char *IID()
+        {
+            return "0afd9e31-8571-409f-9aba-65ed39b73e20";
+        }
+
     };
 
     struct IXiamiPlaylistInfo : public IUnknown
@@ -72,7 +76,10 @@ namespace xiamiapi
 
         virtual const char *get_album_pic() const = 0;
 
-        virtual ~IXiamiPlaylistInfo() = 0;
+        constexpr static const char *IID()
+        {
+            return "56b09282-2e65-4810-ad18-d3bce8b816cb";
+        }
     };
 
     struct IXiamiSongInfo : public IUnknown
@@ -95,7 +102,10 @@ namespace xiamiapi
 
         virtual bool get_need_pay() const = 0;
 
-        virtual ~IXiamiSongInfo() = 0;
+        constexpr static const char *IID()
+        {
+            return "a0e558d1-da2e-4a4c-b846-1a2fccaf4cea";
+        }
     };
 
     struct IXiamiCollectionInfo : public IUnknown
@@ -108,7 +118,10 @@ namespace xiamiapi
 
         virtual const char *get_user_name() const = 0;
 
-        virtual ~IXiamiCollectionInfo() = 0;
+        constexpr static const char *IID()
+        {
+            return "3d5fdd05-a1c4-4e19-b9f8-f116366111d5";
+        }
     };
 
     struct IXiamiArtistInfo : public IUnknown
@@ -121,7 +134,10 @@ namespace xiamiapi
 
         virtual const char *get_count_likes() const = 0;
 
-        virtual ~IXiamiArtistInfo() = 0;
+        constexpr static const char *IID()
+        {
+            return "0f120178-6cb7-4669-9e84-13b91dba63ab";
+        }
     };
 
     struct IXiamiArtistCategoryInfo : public IUnknown
@@ -132,8 +148,10 @@ namespace xiamiapi
 
         virtual const char *get_artist_name() const = 0;
 
-        virtual ~IXiamiArtistCategoryInfo() = 0;
-
+        constexpr static const char *IID()
+        {
+            return "e42a5d80-3b22-4197-95ad-53eedc2204ae";
+        }
     };
 
     struct IXiamiHotSearchKeyInfo : public IUnknown
@@ -141,8 +159,11 @@ namespace xiamiapi
         virtual const char *get_key() const = 0;
 
         virtual const char *get_count() const = 0;
-        virtual ~IXiamiHotSearchKeyInfo() = 0;
 
+        constexpr static const char *IID()
+        {
+            return "bcecc1f9-3091-4512-9ac0-1f940899dd17";
+        }
     };
 
     struct IXiamiRankInfo : public IUnknown
@@ -153,21 +174,31 @@ namespace xiamiapi
 
         virtual const char *get_logo() const = 0;
 
-        virtual ~IXiamiRankInfo() = 0;
+        constexpr static const char *IID()
+        {
+            return "1a8060fc-ffeb-40f3-9ddb-16458f26aeb2";
+        }
     };
 
     struct IGenericArray: public IUnknown
     {
         virtual IUnknown * get_element(unsigned long index) = 0;
         virtual unsigned long length() = 0;
-        virtual ~IGenericArray() = 0;
+        constexpr static const char *IID()
+        {
+            return "488d7f3e-4c59-4612-a7cd-bc5f364670fe";
+        }
+        virtual RIID ElementIID() = 0;
     };
 
     struct IStr: public IUnknown
     {
         virtual const char * c_str() = 0;
         virtual unsigned long length() = 0;
-        virtual ~IStr() = 0;
+        constexpr static const char *IID()
+        {
+            return "b01db63e-6577-4e1d-a001-90572a631c1a";
+        }
     };
 
     struct IXiamiAPI : public IUnknown
@@ -264,12 +295,15 @@ namespace xiamiapi
                 IGenericArray ** out                // [out] array of rank info, type `IXiamiRankInfo`
         ) = 0;
 
-        virtual ~IXiamiAPI() = 0;
-
         virtual HRESULT GetFileContentFromUrl(
                 const char *url,                   // [in] file url
                 IStr **out                         // [out] file content
         ) = 0;
+
+        constexpr static const char *IID()
+        {
+            return "a4ff86c6-abab-4a8f-9bbc-ebf7e91e9c57";
+        }
     };
 }
 #endif // XIAMIAPI_H

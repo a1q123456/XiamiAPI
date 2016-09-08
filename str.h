@@ -28,7 +28,11 @@ public:
 
     Str& operator=(Str&& other) = delete;
 
-    virtual void Release();
+    virtual unsigned long Release();
+
+    virtual HRESULT QueryInterface(RIID riid, void** ppv);
+
+
 };
 }
 

@@ -45,10 +45,11 @@ int jonathan_lee_id = 573
 api->GetArtistHotSong(jonathan_lee_id, &list);
 for (unsigned long i = 0; i < list->length(); i++)
 {
-  auto song_info = dynamic_cast<IXiamiSongInfo *>(list->get_element(i));
-  song_info->get_song_id();
-  song_info->get_song_name();
-  song_info->get_listen_file();
+  xiamiapi::IXiamiSongInfo* info;
+  list->get_element(i)->QueryInterface(list->ElementIID(), (void **)&info);
+  info->get_song_id();
+  info->get_song_name();
+  info->get_listen_file();
   ...
   // Don't call Release() for any list item
 }
@@ -63,10 +64,11 @@ int playlist_id = 1
 api->GetPlaylist(playlist_id, &list);
 for (unsigned long i = 0; i < list->length(); i++)
 {
-  auto song_info = dynamic_cast<IXiamiPlaylistInfo *>(list->get_element(i));
-  song_info->get_song_id();
-  song_info->get_title();
-  song_info->get_location();
+  xiamiapi::IXiamiPlaylistInfo* info;
+  list->get_element(i)->QueryInterface(list->ElementIID(), (void **)&info);
+  info->get_song_id();
+  info->get_title();
+  info->get_location();
   ...
   // Don't call Release() for any list item
 }
@@ -77,4 +79,3 @@ More detail avaliable in [wiki](https://github.com/a1q123456/XiamiAPI/wiki)
 
 ## TODO
 - [ ] use json pointer to get object
-- [ ] implement IUnknow->QueryInterface() and IGenericArray->GetUUID()

@@ -4,7 +4,6 @@
 
 #include <cstring>
 #include "str.h"
-#include <string>
 
 xiamiapi::Str::Str(const std::string &other)
 {
@@ -22,9 +21,30 @@ const char *xiamiapi::Str::c_str()
     return data;
 }
 
-void xiamiapi::Str::Release()
+unsigned long xiamiapi::Str::Release()
 {
-    delete[] data;
-    delete this;
+    if (--m_Ref == 0)
+    {
+        delete[] data;
+        delete this;
+        return 0;
+    }
+    return 1;
+}
+
+HRESULT xiamiapi::Str::QueryInterface(RIID riid, void** ppv)
+{
+    if (ppv == nullptr)
+    {
+        return E_INVALIDARG;
+    }
+    if (riid == IID_IUnknown || riid == __uuidof(Str))
+    {
+        *ppv = (IUnknown *) this;
+        AddRef();
+        return S_OK;
+    }
+    *ppv = nullptr;
+    return E_NOINTERFACE;
 }
 
