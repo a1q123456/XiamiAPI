@@ -21,7 +21,7 @@ unsigned long xiamiapi::GenericArray::Release()
         for (unsigned long i = 0; i < length(); i++)
         {
             auto tmp = get_element(i);
-            tmp->~IUnknown();
+            tmp->Release();
         }
         delete[] data;
         delete this;
