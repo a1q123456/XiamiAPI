@@ -51,9 +51,11 @@ for (unsigned long i = 0; i < list->length(); i++)
   info->get_song_name();
   info->get_listen_file();
   ...
-  // Don't call Release() for any list item
+  info->Release();
 }
+api->Release();
 
+// Or use smart pointer to manage com resource
 ```
 
 ### Get Playlist
@@ -70,9 +72,11 @@ for (unsigned long i = 0; i < list->length(); i++)
   info->get_title();
   info->get_location();
   ...
-  // Don't call Release() for any list item
+  info->Release();
 }
+api->Release();
 
+// Or use smart pointer to manage com resource
 ```
 
 More detail avaliable in [wiki](https://github.com/a1q123456/XiamiAPI/wiki)
