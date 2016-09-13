@@ -2,6 +2,7 @@
 // Created by jack on 16-9-8.
 //
 
+#include <cstdint>
 #include "iunknown.h"
 
 const char * __uuidof_impl(const char * classname)
@@ -25,13 +26,13 @@ HRESULT IUnknown::QueryInterface(RIID riid, void **ppv)
     return E_NOINTERFACE;
 }
 
-unsigned long IUnknown::AddRef()
+uint64_t IUnknown::AddRef()
 {
     ++m_Ref;
     return 0;
 }
 
-unsigned long IUnknown::Release()
+uint64_t IUnknown::Release()
 {
     if (--m_Ref == 0)
     {

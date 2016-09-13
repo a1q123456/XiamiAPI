@@ -28,9 +28,9 @@ namespace xiamiapi
 
         std::string trim(const char * text)
         {
-            int trimlen = 0;
-            int startlen = -1;
-            for(int i = 0; text[i] != '\0'; i++)
+            int64_t trimlen = 0;
+            int64_t startlen = -1;
+            for(int64_t i = 0; text[i] != '\0'; i++)
             {
                 if (text[i] != ' ')
                 {

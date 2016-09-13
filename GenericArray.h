@@ -15,8 +15,8 @@ namespace xiamiapi
     {
     private:
         char* data;
-        unsigned long m_length;
-        unsigned long sizeof_element;
+        uint64_t  m_length;
+        uint64_t  sizeof_element;
         RIID riid;
     public:
         template <class T>
@@ -26,7 +26,7 @@ namespace xiamiapi
             sizeof_element = sizeof(T);
             data = new char[sizeof_element * other.size()];
 
-            for (int i = 0; i < other.size(); i++)
+            for (int64_t i = 0; i < other.size(); i++)
             {
                 new (data + (i * sizeof_element)) T(other[i]);
             }
@@ -41,9 +41,9 @@ namespace xiamiapi
 
         GenericArray& operator=(GenericArray&& other) = delete;
 
-        virtual IUnknown * get_element(unsigned long index);
-        virtual unsigned long length();
-        virtual unsigned long Release();
+        virtual IUnknown * get_element(uint64_t  index);
+        virtual uint64_t  length();
+        virtual uint64_t  Release();
         virtual RIID ElementIID();
 
         virtual HRESULT QueryInterface(RIID riid, void** ppv);

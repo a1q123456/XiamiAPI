@@ -671,21 +671,21 @@ namespace xiamiapi
 
         string GetCaptcha_impl();
 
-        vector<XiamiSongInfo> GetArtistHotSong_impl(const int &artist_id);
+        vector<XiamiSongInfo> GetArtistHotSong_impl(const int64_t &artist_id);
 
         vector<XiamiPlaylistInfo> GetPlaylist_impl(const string &url);
 
-        vector<XiamiPlaylistInfo> GetPlaylist_impl(const int &id, const int &type);
+        vector<XiamiPlaylistInfo> GetPlaylist_impl(const int64_t &id, const int64_t &type);
 
         vector<XiamiPlaylistInfo> GetUserRecommendPlaylist_impl();
 
         vector<XiamiPlaylistInfo> GetRecommendPlaylist_impl();
 
-        vector<XiamiPlaylistInfo> GetCollectionPlaylist_impl(const int &collection_id);
+        vector<XiamiPlaylistInfo> GetCollectionPlaylist_impl(const int64_t &collection_id);
 
-        vector<XiamiPlaylistInfo> GetAlbumPlaylist_impl(const int &album_id);
+        vector<XiamiPlaylistInfo> GetAlbumPlaylist_impl(const int64_t &album_id);
 
-        vector<XiamiPlaylistInfo> GetSongPlaylist_impl(const int &song_id);
+        vector<XiamiPlaylistInfo> GetSongPlaylist_impl(const int64_t &song_id);
 
         string CaserDecode_impl(const string &val);
 
@@ -693,11 +693,11 @@ namespace xiamiapi
 
         string DecLocation_impl(const string &location);
 
-        vector<XiamiSongInfo> Search_impl(const string &key, const int &page = 1, const int &limit = 25);
+        vector<XiamiSongInfo> Search_impl(const string &key, const int64_t &page = 1, const int64_t &limit = 25);
 
         XiamiSongInfo GetSong_impl(const string &song_id);
 
-        vector<XiamiArtistInfo> GetArtistHotList_impl(const int &artist_class, const int &artist_type);
+        vector<XiamiArtistInfo> GetArtistHotList_impl(const int64_t &artist_class, const int64_t &artist_type);
 
         vector<XiamiArtistCategoryInfo> GetArtistCategory_impl();
 
@@ -707,9 +707,9 @@ namespace xiamiapi
 
         std::basic_string<char> get_file_from_url_impl(const string &url);
 
-        vector<XiamiCollectionFullInfo> SearchCollection_impl(std::string key, const int &page = 1);
+        vector<XiamiCollectionFullInfo> SearchCollection_impl(std::string key, const int64_t &page = 1);
 
-        vector<XiamiAlbumInfo> SearchAlbum_impl(std::string key, const int &page = 1);
+        vector<XiamiAlbumInfo> SearchAlbum_impl(std::string key, const int64_t &page = 1);
 
         virtual HRESULT IsLogin(bool *out);
 
@@ -725,12 +725,12 @@ namespace xiamiapi
         );
 
         virtual HRESULT GetArtistHotSong(
-                const int artist_id,                    // [in] artist id
+                const int64_t artist_id,                    // [in] artist id
                 IGenericArray **out           // [out] array of song info
         );
 
-        virtual HRESULT GetPlaylist(const int id,       // [in] playlist id
-                                    const int type,                         // [in] playlist type,
+        virtual HRESULT GetPlaylist(const int64_t id,       // [in] playlist id
+                                    const int64_t type,                         // [in] playlist type,
                                     IGenericArray **out                // [out] array of song
         );
 
@@ -743,17 +743,17 @@ namespace xiamiapi
         );
 
         virtual HRESULT GetCollectionPlaylist(
-                const int collection_id,            // [in] collection id
+                const int64_t collection_id,            // [in] collection id
                 IGenericArray **out                // [out] array of playlist, type `IXiamiPlaylistInfo`
         );
 
         virtual HRESULT GetAlbumPlaylist(
-                const int album_id,                 // [in] album id
+                const int64_t album_id,                 // [in] album id
                 IGenericArray **out                // [out] array of playlist, type `IXiamiPlaylistInfo`
         );
 
         virtual HRESULT GetSongPlaylist(
-                const int song_id,                  // [in] song id
+                const int64_t song_id,                  // [in] song id
                 IGenericArray **out                // [out] array of playlist, type `IXiamiPlaylistInfo`
         );
 
@@ -774,8 +774,8 @@ namespace xiamiapi
         virtual HRESULT Search(
                 const char *key,                    // [in] search key utf8 encoded
                 IGenericArray **out,               // [out] array of song info, type `IXiamiSongInfo`
-                const int page = 1,                 // [in] page number
-                const int limit = 25               // [in] count of search result per page
+                const int64_t page = 1,                 // [in] page number
+                const int64_t limit = 25               // [in] count of search result per page
 
         );
 
@@ -785,8 +785,8 @@ namespace xiamiapi
         );
 
         virtual HRESULT GetArtistHotList(
-                const int artist_class,             // [in] artist class
-                const int artist_type,              // [in] artist type
+                const int64_t artist_class,             // [in] artist class
+                const int64_t artist_type,              // [in] artist type
                 IGenericArray **out                // [out] array of artist info, type `IXiamiArtistInfo`
         );
 
@@ -804,11 +804,11 @@ namespace xiamiapi
 
         virtual HRESULT SearchCollection(const char * key,
                                          IGenericArray **out,
-                                         const int page = 1);
+                                         const int64_t page = 1);
 
         virtual HRESULT SearchAlbum(const char * key,
                                     IGenericArray **out,
-                                    const int &page = 1);
+                                    const int64_t &page = 1);
 
         virtual HRESULT GetFileContentFromUrl(const char *url, IStr **out);
 

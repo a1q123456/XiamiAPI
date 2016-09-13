@@ -13,11 +13,11 @@ class Str: public IStr
 {
 private:
     char * data;
-    unsigned long m_length;
+    uint64_t m_length;
 public:
     Str(const std::string &other);
 
-    virtual unsigned long length();
+    virtual uint64_t length();
     virtual const char * c_str();
 
     Str(const Str &other) = delete;
@@ -28,7 +28,7 @@ public:
 
     Str& operator=(Str&& other) = delete;
 
-    virtual unsigned long Release();
+    virtual uint64_t Release();
 
     virtual HRESULT QueryInterface(RIID riid, void** ppv);
 

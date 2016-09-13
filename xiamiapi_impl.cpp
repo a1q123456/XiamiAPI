@@ -120,7 +120,7 @@ namespace xiamiapi
         {
             cookie_file.seekg(0, cookie_file.end);
             auto size = cookie_file.tellg();
-            string str((unsigned long) size, '\0');
+            string str(static_cast<uint64_t>(size), '\0');
             cookie_file.seekg(0);
             cookie_file.read(&str[0], size);
             cookies = cpr::Cookies(deserialize_cookie(str));
@@ -168,7 +168,7 @@ namespace xiamiapi
         return response.text;
     }
 
-    vector<XiamiSongInfo> XiamiAPI::GetArtistHotSong_impl(const int &artist_id)
+    vector<XiamiSongInfo> XiamiAPI::GetArtistHotSong_impl(const int64_t &artist_id)
     {
         vector<XiamiSongInfo> ret;
         auto api_url = StringUtilities::string_format(
@@ -231,7 +231,7 @@ namespace xiamiapi
         return ret;
     }
 
-    vector<XiamiPlaylistInfo> XiamiAPI::GetPlaylist_impl(const int &id, const int &type)
+    vector<XiamiPlaylistInfo> XiamiAPI::GetPlaylist_impl(const int64_t &id, const int64_t &type)
     {
         auto api_url = StringUtilities::string_format("http://www.xiami.com/song/playlist/id/{id}/type/{type}/cat/json",
                                                       {{"id",   id},
@@ -249,17 +249,17 @@ namespace xiamiapi
         return GetPlaylist_impl(1, 15);
     }
 
-    vector<XiamiPlaylistInfo> XiamiAPI::GetCollectionPlaylist_impl(const int &collection_id)
+    vector<XiamiPlaylistInfo> XiamiAPI::GetCollectionPlaylist_impl(const int64_t &collection_id)
     {
         return GetPlaylist_impl(collection_id, 3);
     }
 
-    vector<XiamiPlaylistInfo> XiamiAPI::GetAlbumPlaylist_impl(const int &album_id)
+    vector<XiamiPlaylistInfo> XiamiAPI::GetAlbumPlaylist_impl(const int64_t &album_id)
     {
         return GetPlaylist_impl(album_id, 1);
     }
 
-    vector<XiamiPlaylistInfo> XiamiAPI::GetSongPlaylist_impl(const int &song_id)
+    vector<XiamiPlaylistInfo> XiamiAPI::GetSongPlaylist_impl(const int64_t &song_id)
     {
         auto api_url = StringUtilities::string_format(
                 "http://www.xiami.com/song/playlist/id/{song_id}/object_name/default/object_id/0/cat/json",
@@ -270,7 +270,7 @@ namespace xiamiapi
     string XiamiAPI::CaserDecode_impl(const string &val)
     {
         auto cipher_len = val.length() - 1;
-        int rows = val[0] - '0';
+        int64_t rows = val[0] - '0';
         size_t cols = cipher_len / rows;
         size_t offset_rows = cipher_len % rows;
         auto text = val.substr(1);
@@ -320,7 +320,7 @@ namespace xiamiapi
         return ret;
     }
 
-    vector<XiamiSongInfo> XiamiAPI::Search_impl(const string &key, const int &page, const int &limit)
+    vector<XiamiSongInfo> XiamiAPI::Search_impl(const string &key, const int64_t &page, const int64_t &limit)
     {
         auto escaped_key = StringUtilities::url_escape(key, false);
         auto api_url = StringUtilities::string_format(
@@ -367,7 +367,7 @@ namespace xiamiapi
         );
     }
 
-    vector<XiamiArtistInfo> XiamiAPI::GetArtistHotList_impl(const int &artist_class, const int &artist_type)
+    vector<XiamiArtistInfo> XiamiAPI::GetArtistHotList_impl(const int64_t &artist_class, const int64_t &artist_type)
     {
         auto api_url = StringUtilities::string_format(
                 "http://api.xiami.com/web?v=2.0&app_key=1&class={artist_class}&type={artist_type}&r=artist/hot-list",
@@ -452,7 +452,7 @@ namespace xiamiapi
         return result.text;
     }
 
-    vector<XiamiCollectionFullInfo> XiamiAPI::SearchCollection_impl(std::string key, const int &page)
+    vector<XiamiCollectionFullInfo> XiamiAPI::SearchCollection_impl(std::string key, const int64_t &page)
     {
         vector<XiamiCollectionFullInfo> ret;
         cpr::Response result = NetworkThrowIfFailed(cpr::Post(
@@ -505,7 +505,7 @@ namespace xiamiapi
         return ret;
     }
 
-    vector<XiamiAlbumInfo> XiamiAPI::SearchAlbum_impl(std::string key, const int &page)
+    vector<XiamiAlbumInfo> XiamiAPI::SearchAlbum_impl(std::string key, const int64_t &page)
     {
 
         vector<XiamiAlbumInfo> ret;
@@ -598,7 +598,7 @@ namespace xiamiapi
         }
     }
 
-    HRESULT XiamiAPI::GetArtistHotSong(const int artist_id, IGenericArray **out)
+    HRESULT XiamiAPI::GetArtistHotSong(const int64_t artist_id, IGenericArray **out)
     {
         try
         {
@@ -615,7 +615,7 @@ namespace xiamiapi
         }
     }
 
-    HRESULT XiamiAPI::GetPlaylist(const int id, const int type, IGenericArray **out)
+    HRESULT XiamiAPI::GetPlaylist(const int64_t id, const int64_t type, IGenericArray **out)
     {
         try
         {
@@ -666,7 +666,7 @@ namespace xiamiapi
         }
     }
 
-    HRESULT XiamiAPI::GetCollectionPlaylist(const int collection_id, IGenericArray **out)
+    HRESULT XiamiAPI::GetCollectionPlaylist(const int64_t collection_id, IGenericArray **out)
     {
         try
         {
@@ -683,7 +683,7 @@ namespace xiamiapi
         }
     }
 
-    HRESULT XiamiAPI::GetAlbumPlaylist(const int album_id, IGenericArray **out)
+    HRESULT XiamiAPI::GetAlbumPlaylist(const int64_t album_id, IGenericArray **out)
     {
         try
         {
@@ -700,7 +700,7 @@ namespace xiamiapi
         }
     }
 
-    HRESULT XiamiAPI::GetSongPlaylist(const int song_id, IGenericArray **out)
+    HRESULT XiamiAPI::GetSongPlaylist(const int64_t song_id, IGenericArray **out)
     {
         try
         {
@@ -768,7 +768,7 @@ namespace xiamiapi
         }
     }
 
-    HRESULT XiamiAPI::Search(const char *key, IGenericArray **out, const int page, const int limit)
+    HRESULT XiamiAPI::Search(const char *key, IGenericArray **out, const int64_t page, const int64_t limit)
     {
         try
         {
@@ -802,7 +802,7 @@ namespace xiamiapi
         }
     }
 
-    HRESULT XiamiAPI::GetArtistHotList(const int artist_class, const int artist_type, IGenericArray **out)
+    HRESULT XiamiAPI::GetArtistHotList(const int64_t artist_class, const int64_t artist_type, IGenericArray **out)
     {
         try
         {
@@ -870,7 +870,7 @@ namespace xiamiapi
         }
     }
 
-    unsigned long XiamiAPI::Release()
+    uint64_t XiamiAPI::Release()
     {
         if (--m_Ref == 0)
         {
@@ -914,7 +914,7 @@ namespace xiamiapi
         return E_NOINTERFACE;
     }
 
-    HRESULT XiamiAPI::SearchCollection(const char *key, IGenericArray **out, const int page)
+    HRESULT XiamiAPI::SearchCollection(const char *key, IGenericArray **out, const int64_t page)
     {
         try
         {
@@ -931,7 +931,7 @@ namespace xiamiapi
         }
     }
 
-    HRESULT XiamiAPI::SearchAlbum(const char *key, IGenericArray **out, const int &page)
+    HRESULT XiamiAPI::SearchAlbum(const char *key, IGenericArray **out, const int64_t &page)
     {
         try
         {
@@ -1048,7 +1048,7 @@ namespace xiamiapi
         return album_pic.c_str();
     }
 
-    unsigned long XiamiPlaylistInfo::Release()
+    uint64_t XiamiPlaylistInfo::Release()
     {
         if (--m_Ref == 0)
         {
@@ -1114,7 +1114,7 @@ namespace xiamiapi
         return numlevel.c_str();
     }
 
-    unsigned long XiamiUserInfo::Release()
+    uint64_t XiamiUserInfo::Release()
     {
         if (--m_Ref == 0)
         {
@@ -1185,7 +1185,7 @@ namespace xiamiapi
         return need_pay;
     }
 
-    unsigned long XiamiSongInfo::Release()
+    uint64_t XiamiSongInfo::Release()
     {
         if (--m_Ref == 0)
         {
@@ -1232,7 +1232,7 @@ namespace xiamiapi
         return user_name.c_str();
     }
 
-    unsigned long XiamiCollectionInfo::Release()
+    uint64_t XiamiCollectionInfo::Release()
     {
         if (--m_Ref == 0)
         {
@@ -1278,7 +1278,7 @@ namespace xiamiapi
         return count_likes.c_str();
     }
 
-    unsigned long XiamiArtistInfo::Release()
+    uint64_t XiamiArtistInfo::Release()
     {
         if (--m_Ref == 0)
         {
@@ -1320,7 +1320,7 @@ namespace xiamiapi
         return artist_name.c_str();
     }
 
-    unsigned long XiamiArtistCategoryInfo::Release()
+    uint64_t XiamiArtistCategoryInfo::Release()
     {
         if (--m_Ref == 0)
         {
@@ -1356,7 +1356,7 @@ namespace xiamiapi
         return count.c_str();
     }
 
-    unsigned long XiamiHotSearchKeyInfo::Release()
+    uint64_t XiamiHotSearchKeyInfo::Release()
     {
         if (--m_Ref == 0)
         {
@@ -1397,7 +1397,7 @@ namespace xiamiapi
         return logo.c_str();
     }
 
-    unsigned long XiamiRankInfo::Release()
+    uint64_t XiamiRankInfo::Release()
     {
         if (--m_Ref == 0)
         {
@@ -1573,7 +1573,7 @@ namespace xiamiapi
         return name.c_str();
     }
 
-    unsigned long XiamiCollectionFullInfo::Release()
+    uint64_t XiamiCollectionFullInfo::Release()
     {
         if (--m_Ref == 0)
         {
@@ -1670,7 +1670,7 @@ namespace xiamiapi
         return upgrade_role;
     }
 
-    unsigned long XiamiAlbumInfo::Release()
+    uint64_t XiamiAlbumInfo::Release()
     {
         if (--m_Ref == 0)
         {

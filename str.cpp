@@ -11,7 +11,7 @@ xiamiapi::Str::Str(const std::string &other)
     memcpy(data, other.c_str(), other.size());
 }
 
-unsigned long xiamiapi::Str::length()
+uint64_t xiamiapi::Str::length()
 {
     return m_length;
 }
@@ -21,7 +21,7 @@ const char *xiamiapi::Str::c_str()
     return data;
 }
 
-unsigned long xiamiapi::Str::Release()
+uint64_t xiamiapi::Str::Release()
 {
     if (--m_Ref == 0)
     {

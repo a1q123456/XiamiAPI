@@ -245,8 +245,8 @@ namespace xiamiapi
 
     struct IGenericArray: public IUnknown
     {
-        virtual IUnknown * get_element(unsigned long index) = 0;
-        virtual unsigned long length() = 0;
+        virtual IUnknown * get_element(uint64_t index) = 0;
+        virtual uint64_t length() = 0;
         constexpr static const char *IID()
         {
             return "488d7f3e-4c59-4612-a7cd-bc5f364670fe";
@@ -257,7 +257,7 @@ namespace xiamiapi
     struct IStr: public IUnknown
     {
         virtual const char * c_str() = 0;
-        virtual unsigned long length() = 0;
+        virtual uint64_t length() = 0;
         constexpr static const char *IID()
         {
             return "b01db63e-6577-4e1d-a001-90572a631c1a";
@@ -281,12 +281,12 @@ namespace xiamiapi
         ) = 0;
 
         virtual HRESULT GetArtistHotSong(
-                const int artist_id,                    // [in] artist id
+                const int64_t artist_id,                    // [in] artist id
                 IGenericArray ** out                    // [out] array of song info
         ) = 0;
 
-        virtual HRESULT GetPlaylist(const int id,       // [in] playlist id
-                const int type,                         // [in] playlist type,
+        virtual HRESULT GetPlaylist(const int64_t id,       // [in] playlist id
+                const int64_t type,                         // [in] playlist type,
                 IGenericArray ** out                // [out] array of song, type `IXiamiPlaylistInfo`
         ) = 0;
 
@@ -299,17 +299,17 @@ namespace xiamiapi
         ) = 0;
 
         virtual HRESULT GetCollectionPlaylist(
-                const int collection_id,            // [in] collection id
+                const int64_t collection_id,            // [in] collection id
                 IGenericArray ** out                // [out] array of playlist, type `IXiamiPlaylistInfo`
         ) = 0;
 
         virtual HRESULT GetAlbumPlaylist(
-                const int album_id,                 // [in] album id
+                const int64_t album_id,                 // [in] album id
                 IGenericArray ** out                // [out] array of playlist, type `IXiamiPlaylistInfo`
         ) = 0;
 
         virtual HRESULT GetSongPlaylist(
-                const int song_id,                  // [in] song id
+                const int64_t song_id,                  // [in] song id
                 IGenericArray ** out                // [out] array of playlist, type `IXiamiPlaylistInfo`
         ) = 0;
 
@@ -330,8 +330,8 @@ namespace xiamiapi
         virtual HRESULT Search(
                 const char *key,                    // [in] search key utf8 encoded
                 IGenericArray ** out,               // [out] array of song info, type `IXiamiSongInfo`
-                const int page = 1,                 // [in] page number
-                const int limit = 25               // [in] count of search result per page
+                const int64_t page = 1,                 // [in] page number
+                const int64_t limit = 25               // [in] count of search result per page
 
         ) = 0;
 
@@ -341,8 +341,8 @@ namespace xiamiapi
         ) = 0;
 
         virtual HRESULT GetArtistHotList(
-                const int artist_class,             // [in] artist class
-                const int artist_type,              // [in] artist type
+                const int64_t artist_class,             // [in] artist class
+                const int64_t artist_type,              // [in] artist type
                 IGenericArray ** out                // [out] array of artist info, type `IXiamiArtistInfo`
         ) = 0;
 
@@ -365,11 +365,11 @@ namespace xiamiapi
 
         virtual HRESULT SearchCollection(const char * key,      // [in] search key
                                          IGenericArray **out,   // [out] array of collection info type `IXiamiCollectionFullInfo`
-                                         const int page = 1) = 0; // [in] page count
+                                         const int64_t page = 1) = 0; // [in] page count
 
         virtual HRESULT SearchAlbum(const char * key,           // [in] search key
                                     IGenericArray **out,        // [out] array of album info type `IXiamiAlbumInfo`
-                                    const int &page = 1) = 0;   // [in] page count
+                                    const int64_t &page = 1) = 0;   // [in] page count
 
         constexpr static const char *IID()
         {

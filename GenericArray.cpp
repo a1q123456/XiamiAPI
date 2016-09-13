@@ -4,21 +4,21 @@
 
 #include "GenericArray.h"
 
-IUnknown * xiamiapi::GenericArray::get_element(unsigned long index)
+IUnknown * xiamiapi::GenericArray::get_element(uint64_t index)
 {
     return reinterpret_cast<IUnknown *>(data + (sizeof_element * index));
 }
 
-unsigned long xiamiapi::GenericArray::length()
+uint64_t xiamiapi::GenericArray::length()
 {
     return m_length;
 }
 
-unsigned long xiamiapi::GenericArray::Release()
+uint64_t xiamiapi::GenericArray::Release()
 {
     if (--m_Ref == 0)
     {
-        for (unsigned long i = 0; i < length(); i++)
+        for (uint64_t i = 0; i < length(); i++)
         {
             auto tmp = get_element(i);
             tmp->Release();

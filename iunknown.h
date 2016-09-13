@@ -21,7 +21,7 @@ const char * __uuidof_impl()
 struct IUnknown
 {
     static const char * IID();
-    int m_Ref = 1;
+    int64_t m_Ref = 1;
     virtual unsigned long Release() = 0;
     virtual HRESULT QueryInterface(RIID riid, void ** ppv) = 0;
     virtual unsigned long AddRef();
