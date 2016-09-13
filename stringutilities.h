@@ -5,6 +5,7 @@
 #include <vector>
 #include <cstring>
 #include <typeinfo>
+#include <sstream>
 
 namespace xiamiapi
 {
@@ -55,6 +56,19 @@ namespace xiamiapi
         std::string string_format(const std::string & fmt, const std::initializer_list<string_format_pair> & args);
         std::string url_escape(const std::string & str, const bool & form_encode = true);
         std::string url_unescape(const std::string & str);
+        template <class T>
+        static std::string join(T container)
+        {
+            std::stringstream ss;
+            for(auto i : container)
+            {
+                if(i != container.begin())
+                    ss << ",";
+                ss << i;
+            }
+            std::string s = ss.str();
+            return s;
+        }
     };
 }
 #endif // STRINGUTILITIES_H

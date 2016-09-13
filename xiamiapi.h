@@ -1,9 +1,13 @@
 #ifndef XIAMIAPI_H
 #define XIAMIAPI_H
 
+#include <cstdint>
 #include "iunknown.h"
 
 #define XIAMIAPI_EXPORT __attribute__((__visibility__("default")))
+
+
+
 
 namespace xiamiapi
 {
@@ -110,13 +114,10 @@ namespace xiamiapi
 
     struct IXiamiCollectionInfo : public IUnknown
     {
-        virtual const char *get_list_id() const = 0;
-
-        virtual const char *get_collect_name() const = 0;
-
-        virtual const char *get_logo() const = 0;
-
-        virtual const char *get_user_name() const = 0;
+        virtual const char * get_list_id() const = 0;
+        virtual const char * get_collect_name() const = 0;
+        virtual const char * get_user_name() const = 0;
+        virtual const char * get_logo() const = 0;
 
         constexpr static const char *IID()
         {
@@ -124,9 +125,49 @@ namespace xiamiapi
         }
     };
 
+    struct IXiamiCollectionFullInfo : public IUnknown
+    {
+        virtual bool get_is_help() = 0;
+        virtual bool get_is_public() = 0;
+        virtual int64_t get_list_id() = 0;
+        virtual int64_t get_user_id() = 0;
+        virtual const char * get_collect_name() = 0;
+        virtual const char * get_collect_logo() = 0;
+        virtual const char * get_original_des() = 0;
+        virtual const char * get_song_count() = 0;
+        virtual const char * get_play_count() = 0;
+        virtual int64_t get_gmt_create() = 0;
+        virtual int64_t get_gmt_modify() = 0;
+        virtual const char * get_views() = 0;
+        virtual const char * get_downloads() = 0;
+        virtual const char * get_favorites() = 0;
+        virtual const char * get_recommends() = 0;
+        virtual const char * get_user_name() = 0;
+        virtual const char * get_author_avatar() = 0;
+        virtual bool get_avatar_default() = 0;
+        virtual bool get_is_vip() = 0;
+        virtual const char * get_comments() = 0;
+        virtual const char * get_tags() = 0;
+        virtual const char * get_pinyin() = 0;
+        virtual const char * get_collects() = 0;
+        virtual const char * get_nick_name() = 0;
+        virtual const char * get_logo() = 0;
+        virtual const char * get_songs_count() = 0;
+        virtual const char * get_description() = 0;
+        virtual const char * get_avatar() = 0;
+        virtual bool get_type() = 0;
+        virtual const char * get_name() = 0;
+        
+        
+        constexpr static const char *IID()
+        {
+            return "5b08a119-e5de-4fea-8c3b-d72c045c5879";
+        }
+    };
+
     struct IXiamiArtistInfo : public IUnknown
     {
-        virtual const char *get_artist_id() const = 0;
+        virtual int64_t get_artist_id() const = 0;
 
         virtual const char *get_name() const = 0;
 
@@ -168,7 +209,7 @@ namespace xiamiapi
 
     struct IXiamiRankInfo : public IUnknown
     {
-        virtual const char *get_id() const = 0;
+        virtual int64_t get_id() const = 0;
 
         virtual const char *get_name() const = 0;
 
@@ -177,6 +218,28 @@ namespace xiamiapi
         constexpr static const char *IID()
         {
             return "1a8060fc-ffeb-40f3-9ddb-16458f26aeb2";
+        }
+    };
+
+    struct IXiamiAlbumInfo: public IUnknown
+    {
+        virtual bool get_is_check() const = 0;
+        virtual int64_t get_album_id() const = 0;
+        virtual int64_t get_artist_id() const = 0;
+        virtual const char * get_title() const = 0;
+        virtual const char * get_artist_name() const = 0;
+        virtual const char * get_album_logo() const = 0;
+        virtual int64_t get_gmt_publish() const = 0;
+        virtual bool get_is_play() const = 0;
+        virtual const char * get_grade() const = 0;
+        virtual const char * get_grade_count() const = 0;
+        virtual int64_t get_musician() const = 0;
+        virtual int64_t get_star() const = 0;
+        virtual int64_t get_album_status() const = 0;
+        virtual int64_t get_upgrade_role() const = 0;
+        constexpr static const char *IID()
+        {
+            return "1a8060fc-ffeb-06d3-9ddb-16458f26aeb2";
         }
     };
 
@@ -299,6 +362,14 @@ namespace xiamiapi
                 const char *url,                   // [in] file url
                 IStr **out                         // [out] file content
         ) = 0;
+
+        virtual HRESULT SearchCollection(const char * key,
+                                         IGenericArray **out,
+                                         const int page = 1) = 0;
+
+        virtual HRESULT SearchAlbum(const char * key,
+                                    IGenericArray **out,
+                                    const int &page = 1) = 0;
 
         constexpr static const char *IID()
         {

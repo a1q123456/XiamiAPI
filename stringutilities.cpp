@@ -8,6 +8,8 @@ namespace xiamiapi
 {
     namespace StringUtilities
     {
+
+
         void split(const std::string &text, char sep, std::vector<std::string> & result) {
           std::size_t start = 0, end = 0;
           while ((end = text.find(sep, start)) != std::string::npos) {
@@ -39,7 +41,7 @@ namespace xiamiapi
                     trimlen++;
                 }
             }
-            return std::string(text + startlen, trimlen);
+            return std::string(text + startlen, static_cast<std::size_t>(trimlen));
         }
 
         std::string string_format(const std::string & fmt, const std::initializer_list<string_format_pair> & args)

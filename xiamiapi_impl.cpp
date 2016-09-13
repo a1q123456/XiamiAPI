@@ -3,41 +3,43 @@
 #include "str.h"
 #include "GenericArray.h"
 #include <algorithm>
+#include "keynotfoundexception.h"
+#include "rapidjson/pointer.h"
 
 using std::string;
 using std::vector;
 
 namespace xiamiapi
 {
-cpr::Response NetworkThrowIfFailed(cpr::Response && result)
-{
-    if (result.status_code != 200)
+    cpr::Response NetworkThrowIfFailed(cpr::Response &&result)
     {
-        throw NetworkException(result.status_code, result.error.message);
-    }
-    return result;
-}
-
-std::map<string, string> deserialize_cookie(string & cookie_str)
-{
-    std::map<string, string> ret;
-    vector<string> lines;
-    xiamiapi::StringUtilities::split(cookie_str, ';', lines);
-    decltype(lines) key_value;
-    for (auto i : lines)
-    {
-        if (i == " " || i == "")
+        if (result.status_code != 200)
         {
-            continue;
+            throw NetworkException(result.status_code, result.error.message);
         }
-        StringUtilities::split(i, '=', key_value);
-        ret[key_value[0]] = key_value[1];
+        return result;
     }
-    return ret;
-}
+
+    std::map<string, string> deserialize_cookie(string &cookie_str)
+    {
+        std::map<string, string> ret;
+        vector<string> lines;
+        xiamiapi::StringUtilities::split(cookie_str, ';', lines);
+        decltype(lines) key_value;
+        for (auto i : lines)
+        {
+            if (i == " " || i == "")
+            {
+                continue;
+            }
+            StringUtilities::split(i, '=', key_value);
+            ret[key_value[0]] = key_value[1];
+        }
+        return ret;
+    }
 
 
-    inline void XiamiAPI::updateCookie(const cpr::Cookies & cookie)
+    inline void XiamiAPI::updateCookie(const cpr::Cookies &cookie)
     {
         this->cookies = cookie;
         std::fstream cookie_file;
@@ -47,7 +49,7 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
         cookie_file.close();
     }
 
-    inline rapidjson::Document XiamiAPI::GetJson(const string & url, cpr::Header header)
+    inline rapidjson::Document XiamiAPI::GetJson(const string &url, cpr::Header header)
     {
         rapidjson::Document ret;
         cpr::Response json = NetworkThrowIfFailed(cpr::Get(cpr::Url{url}, cookies, header));
@@ -57,29 +59,29 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
         return ret;
     }
 
-    string XiamiAPI::XiamiHtmlLogin(const string & email, const string & password, const string & validation)
+    string XiamiAPI::XiamiHtmlLogin(const string &email, const string &password, const string &validation)
     {
         auto XiamiLoginUrl = "https://login.xiami.com/web/login";
         if (validation == "")
         {
             cpr::Response response = NetworkThrowIfFailed(cpr::Post(cpr::Url{XiamiLoginUrl}, cookies,
-                                               cpr::Payload{{"email", email},
-                                                            {"password", password},
-                                                            {"remember", "1"},
-                                                            {"LoginButton", "%E7%99%BB%E5%BD%95"}
-                                               }));
+                                                                    cpr::Payload{{"email",       email},
+                                                                                 {"password",    password},
+                                                                                 {"remember",    "1"},
+                                                                                 {"LoginButton", "%E7%99%BB%E5%BD%95"}
+                                                                    }));
             updateCookie(response.cookies);
             return response.text;
         }
         else
         {
             cpr::Response response = NetworkThrowIfFailed(cpr::Post(cpr::Url{XiamiLoginUrl}, cookies,
-                                               cpr::Payload{{"email", email},
-                                                            {"password", password},
-                                                            {"remember", "1"},
-                                                            {"LoginButton", "%E7%99%BB%E5%BD%95"},
-                                                            {"validate", validation}
-                                               }));
+                                                                    cpr::Payload{{"email",       email},
+                                                                                 {"password",    password},
+                                                                                 {"remember",    "1"},
+                                                                                 {"LoginButton", "%E7%99%BB%E5%BD%95"},
+                                                                                 {"validate",    validation}
+                                                                    }));
             updateCookie(response.cookies);
             return response.text;
         }
@@ -94,7 +96,7 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
     }
 
 
-    XiamiAPI::XiamiAPI(const string & cookie_file_name)
+    XiamiAPI::XiamiAPI(const string &cookie_file_name)
     {
         auto xiami_url = "http://www.xiami.com/web/profile";
         this->cookie_file_name = cookie_file_name;
@@ -138,7 +140,7 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
             }
         }
 
-        const rapidjson::Document & json_doc = GetJson("http://www.xiami.com/index/home", {});
+        const rapidjson::Document &json_doc = GetJson("http://www.xiami.com/index/home", {});
 
         if (json_doc["data"].IsNull() || json_doc["data"]["userInfo"].IsArray())
         {
@@ -146,21 +148,22 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
         }
 
         XiamiUserInfo ret(
-                    json_doc["data"]["userInfo"]["user_id"].GetString(),
-                    json_doc["data"]["userInfo"]["nick_name"].GetString(),
-                    json_doc["data"]["userInfo"]["avatar"].GetString(),
-                    std::to_string(json_doc["data"]["userInfo"]["isMusician"].GetInt()),
-                    std::to_string(json_doc["data"]["userInfo"]["isVip"].GetInt()),
-                    json_doc["data"]["userInfo"]["credits"].GetString(),
-                    json_doc["data"]["userInfo"]["level"].GetString(),
-                    std::to_string(json_doc["data"]["userInfo"]["numlevel"].GetInt())
-                );
+                json_doc["data"]["userInfo"]["user_id"].GetString(),
+                json_doc["data"]["userInfo"]["nick_name"].GetString(),
+                json_doc["data"]["userInfo"]["avatar"].GetString(),
+                std::to_string(json_doc["data"]["userInfo"]["isMusician"].GetInt()),
+                std::to_string(json_doc["data"]["userInfo"]["isVip"].GetInt()),
+                json_doc["data"]["userInfo"]["credits"].GetString(),
+                json_doc["data"]["userInfo"]["level"].GetString(),
+                std::to_string(json_doc["data"]["userInfo"]["numlevel"].GetInt())
+        );
         return ret;
     }
 
     string XiamiAPI::GetCaptcha_impl()
     {
-        cpr::Response response = NetworkThrowIfFailed(cpr::Get(cpr::Url{"https://login.xiami.com/coop/checkcode?forlogin=1"}, cookies));
+        cpr::Response response = NetworkThrowIfFailed(
+                cpr::Get(cpr::Url{"https://login.xiami.com/coop/checkcode?forlogin=1"}, cookies));
         updateCookie(response.cookies);
         return response.text;
     }
@@ -168,9 +171,12 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
     vector<XiamiSongInfo> XiamiAPI::GetArtistHotSong_impl(const int &artist_id)
     {
         vector<XiamiSongInfo> ret;
-        auto api_url = StringUtilities::string_format("http://api.xiami.com/web?v=2.0&app_key=1&id={artist_id}&r=artist/hot-songs", {{"artist_id", artist_id}});
-        const rapidjson::Document & json_doc = GetJson(api_url, cpr::Header{{"Referer", "http://h.xiami.com/index.html"}});
-        const rapidjson::Value & hot_song_data = json_doc["data"];
+        auto api_url = StringUtilities::string_format(
+                "http://api.xiami.com/web?v=2.0&app_key=1&id={artist_id}&r=artist/hot-songs",
+                {{"artist_id", artist_id}});
+        const rapidjson::Document &json_doc = GetJson(api_url,
+                                                      cpr::Header{{"Referer", "http://h.xiami.com/index.html"}});
+        const rapidjson::Value &hot_song_data = json_doc["data"];
         for (rapidjson::SizeType i = 0; i < hot_song_data.Size(); i++)
         {
             ret.push_back(XiamiSongInfo(
@@ -183,7 +189,7 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
                     hot_song_data[i]["singers"].GetString(),
                     "",
                     hot_song_data[i]["need_pay_flag"].GetInt() != 0
-                              ));
+            ));
         }
 
         return ret;
@@ -193,33 +199,33 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
     {
 
         vector<XiamiPlaylistInfo> ret;
-        const rapidjson::Document & json_doc = GetJson(url, {});
-        const rapidjson::Value & track_list = json_doc["data"]["trackList"];
+        const rapidjson::Document &json_doc = GetJson(url, {});
+        const rapidjson::Value &track_list = json_doc["data"]["trackList"];
         for (rapidjson::SizeType i = 0; i < track_list.Size(); i++)
         {
             auto info = XiamiPlaylistInfo(
-                        track_list[i]["songId"].GetString(),
-                        track_list[i]["subName"].GetString(),
-                        std::to_string(track_list[i]["albumId"].GetInt()),
-                        std::to_string(track_list[i]["artistId"].GetInt()),
-                        track_list[i]["artist"].GetString(),
-                        track_list[i]["singers"].GetString(),
-                        // track_list[i]["singerIds"],
-                        track_list[i]["songwriters"].GetString(),
-                        track_list[i]["composer"].GetString(),
-                        track_list[i]["arrangement"].GetString(),
-                        track_list[i]["title"].GetString(),
-                        track_list[i]["album_name"].GetString(),
-                        track_list[i]["sub_title"].GetString(),
-                        track_list[i]["song_sub_title"].GetString(),
-                        track_list[i]["album_logo"].GetString(),
-                        track_list[i]["mvUrl"].GetString(),
-                        std::to_string(track_list[i]["downloadstatus"].GetInt()),
-                        DecLocation_impl(track_list[i]["location"].GetString()),
-                        track_list[i]["lyric_url"].GetString(),
-                        track_list[i]["pic"].GetString(),
-                        track_list[i]["album_pic"].GetString()
-                        );
+                    track_list[i]["songId"].GetString(),
+                    track_list[i]["subName"].GetString(),
+                    std::to_string(track_list[i]["albumId"].GetInt()),
+                    std::to_string(track_list[i]["artistId"].GetInt()),
+                    track_list[i]["artist"].GetString(),
+                    track_list[i]["singers"].GetString(),
+                    // track_list[i]["singerIds"],
+                    track_list[i]["songwriters"].GetString(),
+                    track_list[i]["composer"].GetString(),
+                    track_list[i]["arrangement"].GetString(),
+                    track_list[i]["title"].GetString(),
+                    track_list[i]["album_name"].GetString(),
+                    track_list[i]["sub_title"].GetString(),
+                    track_list[i]["song_sub_title"].GetString(),
+                    track_list[i]["album_logo"].GetString(),
+                    track_list[i]["mvUrl"].GetString(),
+                    std::to_string(track_list[i]["downloadstatus"].GetInt()),
+                    DecLocation_impl(track_list[i]["location"].GetString()),
+                    track_list[i]["lyric_url"].GetString(),
+                    track_list[i]["pic"].GetString(),
+                    track_list[i]["album_pic"].GetString()
+            );
             ret.push_back(info);
         }
         return ret;
@@ -227,7 +233,9 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
 
     vector<XiamiPlaylistInfo> XiamiAPI::GetPlaylist_impl(const int &id, const int &type)
     {
-        auto api_url = StringUtilities::string_format("http://www.xiami.com/song/playlist/id/{id}/type/{type}/cat/json", {{"id", id}, {"type", type}});
+        auto api_url = StringUtilities::string_format("http://www.xiami.com/song/playlist/id/{id}/type/{type}/cat/json",
+                                                      {{"id",   id},
+                                                       {"type", type}});
         return GetPlaylist_impl(api_url);
     }
 
@@ -253,7 +261,9 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
 
     vector<XiamiPlaylistInfo> XiamiAPI::GetSongPlaylist_impl(const int &song_id)
     {
-        auto api_url = StringUtilities::string_format("http://www.xiami.com/song/playlist/id/{song_id}/object_name/default/object_id/0/cat/json", {{"song_id", song_id}});
+        auto api_url = StringUtilities::string_format(
+                "http://www.xiami.com/song/playlist/id/{song_id}/object_name/default/object_id/0/cat/json",
+                {{"song_id", song_id}});
         return GetPlaylist_impl(api_url);
     }
 
@@ -288,8 +298,9 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
     {
         vector<XiamiCollectionInfo> ret;
         auto api_url = "http://api.xiami.com/web?v=2.0&app_key=1&r=collect/recommend";
-        const rapidjson::Document & json_doc = GetJson(api_url, cpr::Header{{"Referer", "http://h.xiami.com/index.html"}});
-        const rapidjson::Value & collection_data = json_doc["data"];
+        const rapidjson::Document &json_doc = GetJson(api_url,
+                                                      cpr::Header{{"Referer", "http://h.xiami.com/index.html"}});
+        const rapidjson::Value &collection_data = json_doc["data"];
         for (rapidjson::SizeType i = 0; i < collection_data.Size(); i++)
         {
             ret.push_back(XiamiCollectionInfo(
@@ -297,7 +308,7 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
                     collection_data[i]["collect_name"].GetString(),
                     collection_data[i]["logo"].GetString(),
                     collection_data[i]["user_name"].GetString()
-                              ));
+            ));
         }
         return ret;
     }
@@ -312,32 +323,37 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
     vector<XiamiSongInfo> XiamiAPI::Search_impl(const string &key, const int &page, const int &limit)
     {
         auto escaped_key = StringUtilities::url_escape(key, false);
-        auto api_url = StringUtilities::string_format("http://api.xiami.com/web?v=2.0&app_key=1&key={key}&page={page}&limit={limit}&r=search/songs", {{"key", escaped_key}, {"page", page}, {"limit", limit}});
-        const rapidjson::Document & json_doc = GetJson(api_url, {{"Referer", "http://h.xiami.com/index.html"}});
-        const rapidjson::Value & song_doc = json_doc["data"]["songs"];
+        auto api_url = StringUtilities::string_format(
+                "http://api.xiami.com/web?v=2.0&app_key=1&key={key}&page={page}&limit={limit}&r=search/songs",
+                {{"key",   escaped_key},
+                 {"page",  page},
+                 {"limit", limit}});
+        const rapidjson::Document &json_doc = GetJson(api_url, {{"Referer", "http://h.xiami.com/index.html"}});
+        const rapidjson::Value &song_doc = json_doc["data"]["songs"];
         vector<XiamiSongInfo> ret;
         for (rapidjson::SizeType i = 0; i < song_doc.Size(); i++)
         {
             ret.push_back(XiamiSongInfo(
-                              std::to_string(song_doc[i]["song_id"].GetInt64()),
-                              song_doc[i]["song_name"].GetString(),
-                              std::to_string(song_doc[i]["album_id"].GetInt64()),
-                              song_doc[i]["album_name"].GetString(),
-                              std::to_string(song_doc[i]["artist_id"].GetInt64()),
-                              song_doc[i]["artist_name"].GetString(),
-                              "",
-                              song_doc[i]["listen_file"].GetString(),
-                              song_doc[i]["need_pay_flag"].GetInt() != 0
-                              ));
+                    std::to_string(song_doc[i]["song_id"].GetInt64()),
+                    song_doc[i]["song_name"].GetString(),
+                    std::to_string(song_doc[i]["album_id"].GetInt64()),
+                    song_doc[i]["album_name"].GetString(),
+                    std::to_string(song_doc[i]["artist_id"].GetInt64()),
+                    song_doc[i]["artist_name"].GetString(),
+                    "",
+                    song_doc[i]["listen_file"].GetString(),
+                    song_doc[i]["need_pay_flag"].GetInt() != 0
+            ));
         }
         return ret;
     }
 
     XiamiSongInfo XiamiAPI::GetSong_impl(const string &song_id)
     {
-        auto api_url = StringUtilities::string_format("http://api.xiami.com/web?v=2.0&app_key=1&id={song_id}&r=song/detail", {{"song_id", song_id}});
-        const rapidjson::Document & json_doc = GetJson(api_url, {{"Referer", "http://h.xiami.com/index.html"}});
-        const rapidjson::Value & song_doc = json_doc["data"]["song"];
+        auto api_url = StringUtilities::string_format(
+                "http://api.xiami.com/web?v=2.0&app_key=1&id={song_id}&r=song/detail", {{"song_id", song_id}});
+        const rapidjson::Document &json_doc = GetJson(api_url, {{"Referer", "http://h.xiami.com/index.html"}});
+        const rapidjson::Value &song_doc = json_doc["data"]["song"];
         return XiamiSongInfo(
                 std::to_string(song_doc["song_id"].GetInt64()),
                 song_doc["song_name"].GetString(),
@@ -348,23 +364,26 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
                 song_doc["singers"].GetString(),
                 song_doc["listen_file"].GetString(),
                 song_doc["need_pay_flag"].GetInt() != 0
-                    );
+        );
     }
 
     vector<XiamiArtistInfo> XiamiAPI::GetArtistHotList_impl(const int &artist_class, const int &artist_type)
     {
-        auto api_url = StringUtilities::string_format("http://api.xiami.com/web?v=2.0&app_key=1&class={artist_class}&type={artist_type}&r=artist/hot-list", {{"artist_class", artist_class}, {"artist_type", artist_type}});
-        const rapidjson::Document & json_doc = GetJson(api_url, {{"Referer", "http://h.xiami.com/index.html"}});
+        auto api_url = StringUtilities::string_format(
+                "http://api.xiami.com/web?v=2.0&app_key=1&class={artist_class}&type={artist_type}&r=artist/hot-list",
+                {{"artist_class", artist_class},
+                 {"artist_type",  artist_type}});
+        const rapidjson::Document &json_doc = GetJson(api_url, {{"Referer", "http://h.xiami.com/index.html"}});
         vector<XiamiArtistInfo> ret;
-        const rapidjson::Value & artist_data = json_doc["data"]["artists"];
+        const rapidjson::Value &artist_data = json_doc["data"]["artists"];
         for (rapidjson::SizeType i = 0; i < artist_data.Size(); i++)
         {
             ret.push_back(XiamiArtistInfo(
-                    std::to_string(artist_data[i]["artist_id"].GetInt64()),
+                    artist_data[i]["artist_id"].GetInt64(),
                     artist_data[i]["name"].GetString(),
                     artist_data[i]["logo"].GetString(),
                     std::to_string(artist_data[i]["count_likes"].GetInt64())
-                              ));
+            ));
         }
         return ret;
     }
@@ -373,15 +392,15 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
     {
         vector<XiamiArtistCategoryInfo> ret;
         auto api_url = "http://api.xiami.com/web?v=2.0&app_key=1&r=artist/category";
-        const rapidjson::Document & json_doc = GetJson(api_url, {{"Referer", "http://h.xiami.com/index.html"}});
-        const rapidjson::Value & category_data = json_doc["data"];
+        const rapidjson::Document &json_doc = GetJson(api_url, {{"Referer", "http://h.xiami.com/index.html"}});
+        const rapidjson::Value &category_data = json_doc["data"];
         for (rapidjson::SizeType i = 0; i < category_data.Size(); i++)
         {
             ret.push_back(XiamiArtistCategoryInfo(
                     std::to_string(category_data[i]["class"].GetInt64()),
                     std::to_string(category_data[i]["type"].GetInt64()),
                     category_data[i]["name"].GetString()
-                              ));
+            ));
         }
         return ret;
     }
@@ -390,14 +409,14 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
     {
         vector<XiamiHotSearchKeyInfo> ret;
         auto api_url = "http://api.xiami.com/web?v=2.0&app_key=1&r=search/hot";
-        const rapidjson::Document & json_doc = GetJson(api_url, {{"Referer", "http://h.xiami.com/index.html"}});
-        const rapidjson::Value & key_data = json_doc["data"];
+        const rapidjson::Document &json_doc = GetJson(api_url, {{"Referer", "http://h.xiami.com/index.html"}});
+        const rapidjson::Value &key_data = json_doc["data"];
         for (rapidjson::SizeType i = 0; i < key_data.Size(); i++)
         {
             ret.push_back(XiamiHotSearchKeyInfo(
-                        key_data[i]["key"].GetString(),
-                        std::to_string(key_data[i]["count"].GetInt64())
-                              ));
+                    key_data[i]["key"].GetString(),
+                    std::to_string(key_data[i]["count"].GetInt64())
+            ));
         }
 
         return ret;
@@ -405,32 +424,123 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
 
     vector<XiamiRankInfo> XiamiAPI::GetRankList_impl()
     {
-        static const vector<XiamiRankInfo> ret {
-                XiamiRankInfo("101", "虾米音乐榜", "http://gtms01.alicdn.com/tps/i1/T19LocFghXXXXsGF3s-640-640.png"),
-                XiamiRankInfo("103", "虾米原创榜", "http://gtms01.alicdn.com/tps/i1/T1qMgSFlxkXXXsGF3s-640-640.png"),
-                XiamiRankInfo("1", "Hito中文排行榜", "http://res.xiami.net/static/app/img/tw@2x.png"),
-                XiamiRankInfo("2", "香港劲歌金榜", "http://res.xiami.net/static/app/img/hk@2x.png"),
-                XiamiRankInfo("3", "英国UK单曲榜", "http://res.xiami.net/static/app/img/uk@2x.png"),
-                XiamiRankInfo("4", "Billboard单曲榜", "http://res.xiami.net/static/app/img/us@2x.png"),
-                XiamiRankInfo("5", "Oricon公信单曲榜", "http://res.xiami.net/static/app/img/jp@2x.png"),
-                XiamiRankInfo("6", "M-net综合数据周榜", "http://res.xiami.net/static/app/img/kr@2x.png"),
-                XiamiRankInfo("106", "陌陌试听榜", "http://res.xiami.net/static/app/img/momo.png"),
-                XiamiRankInfo("31", "音乐风云榜", "http://img.xiami.net/img/rank/top12.png"),
-                XiamiRankInfo("10011", "微信分享榜", "http: //img.xiami.net/img/rank/top13.png"),
-                XiamiRankInfo("10012", "微博分享榜", "http: //img.xiami.net/img/rank/top14.png"),
-                XiamiRankInfo("10013", "大虾试听榜", "http: //img.xiami.net/img/rank/top15.png"),
-                XiamiRankInfo("10014", "精选集收录榜", "http: //img.xiami.net/img/rank/top16.png")
+        static const vector<XiamiRankInfo> ret{
+                XiamiRankInfo(101, "虾米音乐榜", "http://gtms01.alicdn.com/tps/i1/T19LocFghXXXXsGF3s-640-640.png"),
+                XiamiRankInfo(103, "虾米原创榜", "http://gtms01.alicdn.com/tps/i1/T1qMgSFlxkXXXsGF3s-640-640.png"),
+                XiamiRankInfo(1, "Hito中文排行榜", "http://res.xiami.net/static/app/img/tw@2x.png"),
+                XiamiRankInfo(2, "香港劲歌金榜", "http://res.xiami.net/static/app/img/hk@2x.png"),
+                XiamiRankInfo(3, "英国UK单曲榜", "http://res.xiami.net/static/app/img/uk@2x.png"),
+                XiamiRankInfo(4, "Billboard单曲榜", "http://res.xiami.net/static/app/img/us@2x.png"),
+                XiamiRankInfo(5, "Oricon公信单曲榜", "http://res.xiami.net/static/app/img/jp@2x.png"),
+                XiamiRankInfo(6, "M-net综合数据周榜", "http://res.xiami.net/static/app/img/kr@2x.png"),
+                XiamiRankInfo(106, "陌陌试听榜", "http://res.xiami.net/static/app/img/momo.png"),
+                XiamiRankInfo(31, "音乐风云榜", "http://img.xiami.net/img/rank/top12.png"),
+                XiamiRankInfo(10011, "微信分享榜", "http: //img.xiami.net/img/rank/top13.png"),
+                XiamiRankInfo(10012, "微博分享榜", "http: //img.xiami.net/img/rank/top14.png"),
+                XiamiRankInfo(10013, "大虾试听榜", "http: //img.xiami.net/img/rank/top15.png"),
+                XiamiRankInfo(10014, "精选集收录榜", "http: //img.xiami.net/img/rank/top16.png")
         };
         return ret;
     }
 
-    std::basic_string<char> XiamiAPI::get_file_from_url_impl(const string & url)
+    std::basic_string<char> XiamiAPI::get_file_from_url_impl(const string &url)
     {
         cpr::Response result = NetworkThrowIfFailed(cpr::Get(cpr::Url{url},
                                                              cookies,
                                                              cpr::Header{{"Referer", "http://h.xiami.com/index.html"}}));
         updateCookie(result.cookies);
         return result.text;
+    }
+
+    vector<XiamiCollectionFullInfo> XiamiAPI::SearchCollection_impl(std::string key, const int &page)
+    {
+        vector<XiamiCollectionFullInfo> ret;
+        cpr::Response result = NetworkThrowIfFailed(cpr::Post(
+                cpr::Url{"http://www.xiami.com/app/xiating/search-collect2"},
+                cpr::Payload{{"key",      key},
+                             {"callback", "xiami"},
+                             {"page",     StringUtilities::to_string(page)}},
+                cpr::Cookies{{"_xiamitoken", cookies["_xiamitoken"]},
+                             {"av",          "4.5"}}
+        ));
+        updateCookie(result.cookies);
+        rapidjson::Document json;
+        json.Parse(result.text.c_str());
+        rapidjson::Value & data = json["data"];
+        for (rapidjson::SizeType i = 0; i < data.Size(); i++)
+        {
+            ret.push_back(XiamiCollectionFullInfo(
+                    data[i]["is_help"].GetBool(),
+                    data[i]["is_public"].GetBool(),
+                    data[i]["list_id"].GetInt64(),
+                    data[i]["user_id"].GetInt64(),
+                    data[i]["collect_name"].GetString(),
+                    data[i]["collect_logo"].GetString(),
+                    data[i]["original_des"].GetString(),
+                    std::to_string(data[i]["song_count"].GetInt64()),
+                    std::to_string(data[i]["play_count"].GetInt64()),
+                    data[i]["gmt_create"].GetInt64(),
+                    data[i]["gmt_modify"].GetInt64(),
+                    std::to_string(data[i]["views"].GetInt64()),
+                    std::to_string(data[i]["downloads"].GetInt64()),
+                    std::to_string(data[i]["favorites"].GetInt64()),
+                    std::to_string(data[i]["recommends"].GetInt64()),
+                    data[i]["user_name"].GetString(),
+                    data[i]["author_avatar"].GetString(),
+                    data[i]["avatar_default"].GetBool(),
+                    data[i]["is_vip"].GetInt() == 1,
+                    std::to_string(data[i]["comments"].GetInt64()),
+                    data[i]["tags"].GetString(),
+                    data[i]["pinyin"].GetString(),
+                    std::to_string(data[i]["collects"].GetInt64()),
+                    data[i]["nick_name"].GetString(),
+                    data[i]["logo"].GetString(),
+                    std::to_string(data[i]["songs_count"].GetInt64()),
+                    data[i]["description"].GetString(),
+                    data[i]["avatar"].GetString(),
+                    data[i]["type"].GetBool(),
+                    data[i]["name"].GetString()
+            ));
+        }
+        return ret;
+    }
+
+    vector<XiamiAlbumInfo> XiamiAPI::SearchAlbum_impl(std::string key, const int &page)
+    {
+
+        vector<XiamiAlbumInfo> ret;
+        cpr::Response result = NetworkThrowIfFailed(cpr::Post(
+                cpr::Url{"http://www.xiami.com/app/xiating/search-album2"},
+                cpr::Payload{{"key",      key},
+                             {"callback", "xiami"},
+                             {"page",     StringUtilities::to_string(page)}},
+                cpr::Cookies{{"_xiamitoken", cookies["_xiamitoken"]},
+                             {"av",          "4.5"}}
+        ));
+        updateCookie(result.cookies);
+        rapidjson::Document json;
+        json.Parse(result.text.c_str());
+        rapidjson::Value & data = json["data"];
+        for (rapidjson::SizeType i = 0; i < data.Size(); i++)
+        {
+            ret.push_back(XiamiAlbumInfo(
+                    data[i]["is_check"].GetInt64() == 1,
+                    data[i]["album_id"].GetInt64(),
+                    data[i]["artist_id"].GetInt64(),
+                    data[i]["title"].GetString(),
+                    data[i]["artist_name"].GetString(),
+                    data[i]["album_logo"].GetString(),
+                    data[i]["gmt_publish"].GetInt64(),
+                    data[i]["is_play"].GetInt64() == 1,
+                    data[i]["grade"].GetString(),
+                    data[i]["grade_count"].GetString(),
+                    data[i]["musician"].GetInt64(),
+                    data[i]["star"].GetInt64(),
+                    data[i]["album_status"].GetInt64(),
+                    data[i]["upgrade_role"].GetInt64()
+            ));
+        }
+        return ret;
     }
 
     HRESULT XiamiAPI::IsLogin(bool *out)
@@ -804,6 +914,40 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
         return E_NOINTERFACE;
     }
 
+    HRESULT XiamiAPI::SearchCollection(const char *key, IGenericArray **out, const int page)
+    {
+        try
+        {
+            *out = new GenericArray(SearchCollection_impl(key, page), __uuidof(XiamiCollectionFullInfo));
+            return S_OK;
+        }
+        catch (NetworkException)
+        {
+            return 1001UL;
+        }
+        catch (...)
+        {
+            return FAIL;
+        }
+    }
+
+    HRESULT XiamiAPI::SearchAlbum(const char *key, IGenericArray **out, const int &page)
+    {
+        try
+        {
+            *out = new GenericArray(SearchAlbum_impl(key, page), __uuidof(XiamiAlbumInfo));
+            return S_OK;
+        }
+        catch (NetworkException)
+        {
+            return 1001UL;
+        }
+        catch (...)
+        {
+            return FAIL;
+        }
+    }
+
     const char *XiamiPlaylistInfo::get_song_id() const
     {
         return song_id.c_str();
@@ -1114,9 +1258,9 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
         return E_NOINTERFACE;
     }
 
-    const char *XiamiArtistInfo::get_artist_id() const
+    int64_t XiamiArtistInfo::get_artist_id() const
     {
-        return artist_id.c_str();
+        return artist_id;
     }
 
     const char *XiamiArtistInfo::get_name() const
@@ -1238,9 +1382,9 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
         return E_NOINTERFACE;
     }
 
-    const char *XiamiRankInfo::get_id() const
+    int64_t XiamiRankInfo::get_id() const
     {
-        return id.c_str();
+        return id;
     }
 
     const char *XiamiRankInfo::get_name() const
@@ -1279,6 +1423,278 @@ std::map<string, string> deserialize_cookie(string & cookie_str)
         return E_NOINTERFACE;
     }
 
+    bool XiamiCollectionFullInfo::get_is_help()
+    {
+        return is_help;
+    }
+
+    bool XiamiCollectionFullInfo::get_is_public()
+    {
+        return is_public;
+    }
+
+    int64_t XiamiCollectionFullInfo::get_list_id()
+    {
+        return list_id;
+    }
+
+    int64_t XiamiCollectionFullInfo::get_user_id()
+    {
+        return user_id;
+    }
+
+    const char *XiamiCollectionFullInfo::get_collect_name()
+    {
+        return collect_name.c_str();
+    }
+
+    const char *XiamiCollectionFullInfo::get_collect_logo()
+    {
+        return collect_logo.c_str();
+    }
+
+    const char *XiamiCollectionFullInfo::get_original_des()
+    {
+        return original_des.c_str();
+    }
+
+    const char *XiamiCollectionFullInfo::get_song_count()
+    {
+        return song_count.c_str();
+    }
+
+    const char *XiamiCollectionFullInfo::get_play_count()
+    {
+        return play_count.c_str();
+    }
+
+    int64_t XiamiCollectionFullInfo::get_gmt_create()
+    {
+        return gmt_create;
+    }
+
+    int64_t XiamiCollectionFullInfo::get_gmt_modify()
+    {
+        return gmt_modify;
+    }
+
+    const char *XiamiCollectionFullInfo::get_views()
+    {
+        return views.c_str();
+    }
+
+    const char *XiamiCollectionFullInfo::get_downloads()
+    {
+        return downloads.c_str();
+    }
+
+    const char *XiamiCollectionFullInfo::get_favorites()
+    {
+        return favorites.c_str();
+    }
+
+    const char *XiamiCollectionFullInfo::get_recommends()
+    {
+        return recommends.c_str();
+    }
+
+    const char *XiamiCollectionFullInfo::get_user_name()
+    {
+        return user_name.c_str();
+    }
+
+    const char *XiamiCollectionFullInfo::get_author_avatar()
+    {
+        return author_avatar.c_str();
+    }
+
+    bool XiamiCollectionFullInfo::get_avatar_default()
+    {
+        return avatar_default;
+    }
+
+    bool XiamiCollectionFullInfo::get_is_vip()
+    {
+        return is_vip;
+    }
+
+    const char *XiamiCollectionFullInfo::get_comments()
+    {
+        return comments.c_str();
+    }
+
+    const char *XiamiCollectionFullInfo::get_tags()
+    {
+        return tags.c_str();
+    }
+
+    const char *XiamiCollectionFullInfo::get_pinyin()
+    {
+        return pinyin.c_str();
+    }
+
+    const char *XiamiCollectionFullInfo::get_collects()
+    {
+        return collects.c_str();
+    }
+
+    const char *XiamiCollectionFullInfo::get_nick_name()
+    {
+        return nick_name.c_str();
+    }
+
+    const char *XiamiCollectionFullInfo::get_logo()
+    {
+        return logo.c_str();
+    }
+
+    const char *XiamiCollectionFullInfo::get_songs_count()
+    {
+        return songs_count.c_str();
+    }
+
+    const char *XiamiCollectionFullInfo::get_description()
+    {
+        return description.c_str();
+    }
+
+    const char *XiamiCollectionFullInfo::get_avatar()
+    {
+        return avatar.c_str();
+    }
+
+    bool XiamiCollectionFullInfo::get_type()
+    {
+        return type;
+    }
+
+    const char *XiamiCollectionFullInfo::get_name()
+    {
+        return name.c_str();
+    }
+
+    unsigned long XiamiCollectionFullInfo::Release()
+    {
+        if (--m_Ref == 0)
+        {
+            delete this;
+            return 0;
+        }
+        return 1;
+    }
+
+    HRESULT XiamiCollectionFullInfo::QueryInterface(RIID riid, void **ppv)
+    {
+        if (ppv == nullptr)
+        {
+            return E_INVALIDARG;
+        }
+        if (riid == IID_IUnknown || riid == __uuidof(XiamiCollectionFullInfo))
+        {
+            *ppv = (IUnknown *) this;
+            AddRef();
+            return S_OK;
+        }
+        *ppv = nullptr;
+        return E_NOINTERFACE;
+    }
+
+
+    bool XiamiAlbumInfo::get_is_check() const
+    {
+        return is_check;
+    }
+
+    int64_t XiamiAlbumInfo::get_album_id() const
+    {
+        return album_id;
+    }
+
+    int64_t XiamiAlbumInfo::get_artist_id() const
+    {
+        return artist_id;
+    }
+
+    const char *XiamiAlbumInfo::get_title() const
+    {
+        return title.c_str();
+    }
+
+    const char *XiamiAlbumInfo::get_artist_name() const
+    {
+        return artist_name.c_str();
+    }
+
+    const char *XiamiAlbumInfo::get_album_logo() const
+    {
+        return album_logo.c_str();
+    }
+
+    int64_t XiamiAlbumInfo::get_gmt_publish() const
+    {
+        return gmt_publish;
+    }
+
+    bool XiamiAlbumInfo::get_is_play() const
+    {
+        return is_play;
+    }
+
+    const char *XiamiAlbumInfo::get_grade() const
+    {
+        return grade.c_str();
+    }
+
+    const char *XiamiAlbumInfo::get_grade_count() const
+    {
+        return grade_count.c_str();
+    }
+
+    int64_t XiamiAlbumInfo::get_musician() const
+    {
+        return musician;
+    }
+
+    int64_t XiamiAlbumInfo::get_star() const
+    {
+        return star;
+    }
+
+    int64_t XiamiAlbumInfo::get_album_status() const
+    {
+        return album_status;
+    }
+
+    int64_t XiamiAlbumInfo::get_upgrade_role() const
+    {
+        return upgrade_role;
+    }
+
+    unsigned long XiamiAlbumInfo::Release()
+    {
+        if (--m_Ref == 0)
+        {
+            delete this;
+            return 0;
+        }
+        return 1;
+    }
+
+    HRESULT XiamiAlbumInfo::QueryInterface(RIID riid, void **ppv)
+    {
+        if (ppv == nullptr)
+        {
+            return E_INVALIDARG;
+        }
+        if (riid == IID_IUnknown || riid == __uuidof(XiamiAlbumInfo))
+        {
+            *ppv = (IUnknown *) this;
+            AddRef();
+            return S_OK;
+        }
+        *ppv = nullptr;
+        return E_NOINTERFACE;
+    }
 }
 
 

@@ -16,516 +16,805 @@ using std::string;
 namespace xiamiapi
 {
 
-cpr::Response NetworkThrowIfFailed(cpr::Response && result);
+    cpr::Response NetworkThrowIfFailed(cpr::Response &&result);
 
-std::map<string, string> deserialize_cookie(string & cookie_str);
+    std::map<string, string> deserialize_cookie(string &cookie_str);
 
-struct XiamiUserInfo: public IXiamiUserInfo
-{
-
-    XiamiUserInfo() = default;
-    XiamiUserInfo(const string & user_id, const string & nick_name, const string & avatar,
-                  const string isMusician, const string isVip, const string & credits,
-                  const string & level, const string numlevel) :
-        user_id(user_id), nick_name(nick_name), avatar(avatar), isMusician(isMusician),
-        isVip(isVip), credits(credits), level(level), numlevel(numlevel)
+    struct XiamiUserInfo : public IXiamiUserInfo
     {
 
-    }
+        XiamiUserInfo() = default;
 
-    string user_id;
-    string nick_name;
-    string avatar;
-    string isMusician;
-    string isVip;
-    string credits;
-    string level;
-    string numlevel;
+        XiamiUserInfo(const string &user_id, const string &nick_name, const string &avatar,
+                      const string isMusician, const string isVip, const string &credits,
+                      const string &level, const string numlevel) :
+                user_id(user_id), nick_name(nick_name), avatar(avatar), isMusician(isMusician),
+                isVip(isVip), credits(credits), level(level), numlevel(numlevel)
+        {
 
-    virtual const char * get_user_id() const;
-    virtual const char * get_nick_name() const;
-    virtual const char * get_avatar() const;
-    virtual const char * get_isMusician() const;
-    virtual const char * get_isVip() const;
-    virtual const char * get_credits() const;
-    virtual const char * get_level() const;
-    virtual const char * get_numlevel() const;
-    virtual unsigned long Release();
-    virtual HRESULT QueryInterface(RIID riid, void** ppv);
-};
+        }
 
-struct XiamiPlaylistInfo: public IXiamiPlaylistInfo
-{
-    XiamiPlaylistInfo() = default;
-    XiamiPlaylistInfo(
-            const string & song_id,
-            const string & sub_name,
-            const string & album_id,
-            const string & artist_id,
-            const string & artist,
-            const string & singers,
-            // const vector<string> & singer_ids,
-            const string & song_writers,
-            const string & composer,
-            const string & arrangement,
-            const string & title,
-            const string & album_name,
-            const string & sub_title,
-            const string & song_sub_title,
-            const string & album_logo,
-            const string & mv_url,
-            const string & download_status,
-            const string & location,
-            const string & lyric_url,
-            const string & pic,
-            const string & album_pic
-            ):
-        song_id(song_id),
-        sub_name(sub_name),
-        album_id(album_id),
-        artist_id(artist_id),
-        artist(artist),
-        singers(singers),
-        // singer_ids(singer_ids),
-        song_writers(song_writers),
-        composer(composer),
-        arrangement(arrangement),
-        title(title),
-        album_name(album_name),
-        sub_title(sub_title),
-        song_sub_title(song_sub_title),
-        album_logo(album_logo),
-        mv_url(mv_url),
-        download_status(download_status),
-        location(location),
-        lyric_url(lyric_url),
-        pic(pic),
-        album_pic(album_pic)
-    { }
+        string user_id;
+        string nick_name;
+        string avatar;
+        string isMusician;
+        string isVip;
+        string credits;
+        string level;
+        string numlevel;
 
-    string song_id;
-    string sub_name;
-    string album_id;
-    string artist_id;
-    string artist;
-    string singers;
-    // vector<string> singer_ids;
-    string song_writers;
-    string composer;
-    string arrangement;
-    string title;
-    string album_name;
-    string sub_title;
-    string song_sub_title;
-    string album_logo;
-    string mv_url;
-    string download_status;
-    string location;
-    string lyric_url;
-    string pic;
-    string album_pic;
+        virtual const char *get_user_id() const;
 
+        virtual const char *get_nick_name() const;
 
-    virtual const char *get_song_id() const;
+        virtual const char *get_avatar() const;
 
-    virtual const char *get_sub_name() const;
+        virtual const char *get_isMusician() const;
 
-    virtual const char *get_album_id() const;
+        virtual const char *get_isVip() const;
 
-    virtual const char *get_artist_id() const;
+        virtual const char *get_credits() const;
 
-    virtual const char *get_artist() const;
+        virtual const char *get_level() const;
 
-    virtual const char *get_singers() const;
+        virtual const char *get_numlevel() const;
 
-    // Array<const char *> singer_ids;
-    virtual const char *get_song_writers() const;
+        virtual unsigned long Release();
 
-    virtual const char *get_composer() const;
+        virtual HRESULT QueryInterface(RIID riid, void **ppv);
+    };
 
-    virtual const char *get_arrangement() const;
+    struct XiamiPlaylistInfo : public IXiamiPlaylistInfo
+    {
+        XiamiPlaylistInfo() = default;
 
-    virtual const char *get_title() const;
+        XiamiPlaylistInfo(
+                const string &song_id,
+                const string &sub_name,
+                const string &album_id,
+                const string &artist_id,
+                const string &artist,
+                const string &singers,
+                // const vector<string> & singer_ids,
+                const string &song_writers,
+                const string &composer,
+                const string &arrangement,
+                const string &title,
+                const string &album_name,
+                const string &sub_title,
+                const string &song_sub_title,
+                const string &album_logo,
+                const string &mv_url,
+                const string &download_status,
+                const string &location,
+                const string &lyric_url,
+                const string &pic,
+                const string &album_pic
+        ) :
+                song_id(song_id),
+                sub_name(sub_name),
+                album_id(album_id),
+                artist_id(artist_id),
+                artist(artist),
+                singers(singers),
+                // singer_ids(singer_ids),
+                song_writers(song_writers),
+                composer(composer),
+                arrangement(arrangement),
+                title(title),
+                album_name(album_name),
+                sub_title(sub_title),
+                song_sub_title(song_sub_title),
+                album_logo(album_logo),
+                mv_url(mv_url),
+                download_status(download_status),
+                location(location),
+                lyric_url(lyric_url),
+                pic(pic),
+                album_pic(album_pic)
+        {}
 
-    virtual const char *get_album_name() const;
-
-    virtual const char *get_sub_title() const;
-
-    virtual const char *get_song_sub_title() const;
-
-    virtual const char *get_album_logo() const;
-
-    virtual const char *get_mv_url() const;
-
-    virtual const char *get_download_status() const;
-
-    virtual const char *get_location() const;
-
-    virtual const char *get_lyric_url() const;
-
-    virtual const char *get_pic() const;
-
-    virtual const char *get_album_pic() const;
-
-    virtual unsigned long Release();
-
-    virtual HRESULT QueryInterface(RIID riid, void** ppv);
-
-};
-
-struct XiamiSongInfo: public IXiamiSongInfo
-{
-    XiamiSongInfo() = default;
-    XiamiSongInfo(
-            const string & song_id,
-            const string & song_name,
-            const string & album_id,
-            const string & album_name,
-            const string & artist_id,
-            const string & artist_name,
-            const string & singers,
-            const string & listen_file,
-            const bool & need_pay
-            ):
-        song_id(song_id),
-        song_name(song_name),
-        album_id(album_id),
-        album_name(album_name),
-        artist_id(artist_id),
-        artist_name(artist_name),
-        singers(singers),
-        listen_file(listen_file),
-        need_pay(need_pay)
-    {}
-
-    string song_id;
-    string song_name;
-    string album_id;
-    string album_name;
-    string artist_id;
-    string artist_name;
-    string singers;
-    string listen_file;
-    bool need_pay;
+        string song_id;
+        string sub_name;
+        string album_id;
+        string artist_id;
+        string artist;
+        string singers;
+        // vector<string> singer_ids;
+        string song_writers;
+        string composer;
+        string arrangement;
+        string title;
+        string album_name;
+        string sub_title;
+        string song_sub_title;
+        string album_logo;
+        string mv_url;
+        string download_status;
+        string location;
+        string lyric_url;
+        string pic;
+        string album_pic;
 
 
-    virtual const char *get_song_id() const;
+        virtual const char *get_song_id() const;
 
-    virtual const char *get_song_name() const;
+        virtual const char *get_sub_name() const;
 
-    virtual const char *get_album_id() const;
+        virtual const char *get_album_id() const;
 
-    virtual const char *get_album_name() const;
+        virtual const char *get_artist_id() const;
 
-    virtual const char *get_artist_id() const;
+        virtual const char *get_artist() const;
 
-    virtual const char *get_artist_name() const;
+        virtual const char *get_singers() const;
 
-    virtual const char *get_singers() const;
+        // Array<const char *> singer_ids;
+        virtual const char *get_song_writers() const;
 
-    virtual const char *get_listen_file() const;
+        virtual const char *get_composer() const;
 
-    virtual bool get_need_pay() const;
+        virtual const char *get_arrangement() const;
 
-    virtual unsigned long Release();
+        virtual const char *get_title() const;
 
-    virtual HRESULT QueryInterface(RIID riid, void** ppv);
+        virtual const char *get_album_name() const;
 
-};
+        virtual const char *get_sub_title() const;
 
-struct XiamiCollectionInfo: public IXiamiCollectionInfo
-{
-    XiamiCollectionInfo() = default;
-    XiamiCollectionInfo(
-            const string & list_id,
-            const string & collect_name,
-            const string & logo,
-            const string & user_name
-            ) :
-        list_id(list_id),
-        collect_name(collect_name),
-        logo(logo),
-        user_name(user_name)
+        virtual const char *get_song_sub_title() const;
+
+        virtual const char *get_album_logo() const;
+
+        virtual const char *get_mv_url() const;
+
+        virtual const char *get_download_status() const;
+
+        virtual const char *get_location() const;
+
+        virtual const char *get_lyric_url() const;
+
+        virtual const char *get_pic() const;
+
+        virtual const char *get_album_pic() const;
+
+        virtual unsigned long Release();
+
+        virtual HRESULT QueryInterface(RIID riid, void **ppv);
+
+    };
+
+    struct XiamiSongInfo : public IXiamiSongInfo
+    {
+        XiamiSongInfo() = default;
+
+        XiamiSongInfo(
+                const string &song_id,
+                const string &song_name,
+                const string &album_id,
+                const string &album_name,
+                const string &artist_id,
+                const string &artist_name,
+                const string &singers,
+                const string &listen_file,
+                const bool &need_pay
+        ) :
+                song_id(song_id),
+                song_name(song_name),
+                album_id(album_id),
+                album_name(album_name),
+                artist_id(artist_id),
+                artist_name(artist_name),
+                singers(singers),
+                listen_file(listen_file),
+                need_pay(need_pay)
+        {}
+
+        string song_id;
+        string song_name;
+        string album_id;
+        string album_name;
+        string artist_id;
+        string artist_name;
+        string singers;
+        string listen_file;
+        bool need_pay;
+
+
+        virtual const char *get_song_id() const;
+
+        virtual const char *get_song_name() const;
+
+        virtual const char *get_album_id() const;
+
+        virtual const char *get_album_name() const;
+
+        virtual const char *get_artist_id() const;
+
+        virtual const char *get_artist_name() const;
+
+        virtual const char *get_singers() const;
+
+        virtual const char *get_listen_file() const;
+
+        virtual bool get_need_pay() const;
+
+        virtual unsigned long Release();
+
+        virtual HRESULT QueryInterface(RIID riid, void **ppv);
+
+    };
+
+    struct XiamiCollectionInfo : public IXiamiCollectionInfo
+    {
+        XiamiCollectionInfo() = default;
+
+        XiamiCollectionInfo(
+                const string &list_id,
+                const string &collect_name,
+                const string &logo,
+                const string &user_name
+        ) :
+                list_id(list_id),
+                collect_name(collect_name),
+                logo(logo),
+                user_name(user_name)
+        {
+
+        }
+
+        string list_id;
+        string collect_name;
+        string user_name;
+        string logo;
+
+
+        virtual const char *get_list_id() const;
+
+        virtual const char *get_collect_name() const;
+
+        virtual const char *get_logo() const;
+
+        virtual const char *get_user_name() const;
+
+        virtual unsigned long Release();
+
+        virtual HRESULT QueryInterface(RIID riid, void **ppv);
+
+    };
+
+    struct XiamiCollectionFullInfo : public IXiamiCollectionFullInfo
     {
 
-    }
+        XiamiCollectionFullInfo(
+                const bool &is_help,
+                const bool &is_public,
+                const int64_t &list_id,
+                const int64_t &user_id,
+                const string &collect_name,
+                const string &collect_logo,
+                const string &original_des,
+                const string &song_count,
+                const string &play_count,
+                const int64_t &gmt_create,
+                const int64_t &gmt_modify,
+                const string &views,
+                const string &downloads,
+                const string &favorites,
+                const string &recommends,
+                const string &user_name,
+                const string &author_avatar,
+                const bool &avatar_default,
+                const bool &is_vip,
+                const string &comments,
+                const string &tags,
+                const string &pinyin,
+                const string &collects,
+                const string &nick_name,
+                const string &logo,
+                const string &songs_count,
+                const string &description,
+                const string &avatar,
+                const bool &type,
+                const string &name
+        ) :
+                is_help(is_help),
+                is_public(is_public),
+                list_id(list_id),
+                user_id(user_id),
+                collect_name(collect_name),
+                collect_logo(collect_logo),
+                original_des(original_des),
+                song_count(song_count),
+                play_count(play_count),
+                gmt_create(gmt_create),
+                gmt_modify(gmt_modify),
+                views(views),
+                downloads(downloads),
+                favorites(favorites),
+                recommends(recommends),
+                user_name(user_name),
+                author_avatar(author_avatar),
+                avatar_default(avatar_default),
+                is_vip(is_vip),
+                comments(comments),
+                tags(tags),
+                pinyin(pinyin),
+                collects(collects),
+                nick_name(nick_name),
+                logo(logo),
+                songs_count(songs_count),
+                description(description),
+                avatar(avatar),
+                type(type),
+                name(name)
+        {
+
+        }
+
+        bool is_help;
+        bool is_public;
+        int64_t list_id;
+        int64_t user_id;
+        string collect_name;
+        string collect_logo;
+        string original_des;
+        string song_count;
+        string play_count;
+        int64_t gmt_create;
+        int64_t gmt_modify;
+        string views;
+        string downloads;
+        string favorites;
+        string recommends;
+        string user_name;
+        string author_avatar;
+        bool avatar_default;
+        bool is_vip;
+        string comments;
+        string tags;
+        string pinyin;
+        string collects;
+        string nick_name;
+        string logo;
+        string songs_count;
+        string description;
+        string avatar;
+        bool type;
+        string name;
+
+
+        virtual bool get_is_help();
+
+        virtual bool get_is_public();
 
-    string list_id;
-    string collect_name;
-    string logo;
-    string user_name;
+        virtual int64_t get_list_id();
 
-    virtual const char *get_list_id() const;
+        virtual int64_t get_user_id();
 
-    virtual const char *get_collect_name() const;
-
-    virtual const char *get_logo() const;
-
-    virtual const char *get_user_name() const;
-
-    virtual unsigned long Release();
-    virtual HRESULT QueryInterface(RIID riid, void** ppv);
-
-};
+        virtual const char *get_collect_name();
 
-struct XiamiArtistInfo: public IXiamiArtistInfo
-{
-    XiamiArtistInfo() = default;
-    XiamiArtistInfo(
-            const string & artist_id,
-            const string & name,
-            const string & logo,
-            const string & count_likes
-            ):
-        artist_id(artist_id),
-        name(name),
-        logo(logo),
-        count_likes(count_likes) {}
-    string artist_id;
-    string name;
-    string logo;
-    string count_likes;
+        virtual const char *get_collect_logo();
 
-    virtual const char *get_artist_id() const;
+        virtual const char *get_original_des();
 
-    virtual const char *get_name() const;
+        virtual const char *get_song_count();
 
-    virtual const char *get_logo() const;
+        virtual const char *get_play_count();
 
-    virtual const char *get_count_likes() const;
+        virtual int64_t get_gmt_create();
 
-    virtual unsigned long Release();
-    virtual HRESULT QueryInterface(RIID riid, void** ppv);
+        virtual int64_t get_gmt_modify();
 
-};
+        virtual const char *get_views();
 
-struct XiamiArtistCategoryInfo: public IXiamiArtistCategoryInfo
-{
-    XiamiArtistCategoryInfo() = default;
-    XiamiArtistCategoryInfo(
-            const string & artist_class,
-            const string & artist_type,
-            const string & artist_name
-            ):
-        artist_class(artist_class),
-        artist_type(artist_type),
-        artist_name(artist_name)
-    {}
-    string artist_class;
-    string artist_type;
-    string artist_name;
+        virtual const char *get_downloads();
 
-    virtual const char *get_artist_class() const;
+        virtual const char *get_favorites();
 
-    virtual const char *get_artist_type() const;
+        virtual const char *get_recommends();
 
-    virtual const char *get_artist_name() const;
+        virtual const char *get_user_name();
 
-    virtual unsigned long Release();
+        virtual const char *get_author_avatar();
 
-    virtual HRESULT QueryInterface(RIID riid, void** ppv);
-};
+        virtual bool get_avatar_default();
 
-struct XiamiHotSearchKeyInfo: public IXiamiHotSearchKeyInfo
-{
-    XiamiHotSearchKeyInfo() = default;
-    XiamiHotSearchKeyInfo(
-            const string & key,
-            const string & count
-            ):
-        key(key),
-        count(count)
-    {}
-    string key;
-    string count;
+        virtual bool get_is_vip();
 
-    virtual const char *get_key() const;
+        virtual const char *get_comments();
 
-    virtual const char *get_count() const;
+        virtual const char *get_tags();
 
-    virtual unsigned long Release();
+        virtual const char *get_pinyin();
 
-    virtual HRESULT QueryInterface(RIID riid, void** ppv);
-};
+        virtual const char *get_collects();
 
-struct XiamiRankInfo: public IXiamiRankInfo
-{
+        virtual const char *get_nick_name();
 
-    XiamiRankInfo() = default;
-    XiamiRankInfo(
-            const string & id,
-            const string & name,
-            const string & logo
-            ) : id(id), name(name), logo(logo)
-    {}
-    string id;
-    string name;
-    string logo;
+        virtual const char *get_logo();
 
-    virtual const char *get_id() const;
+        virtual const char *get_songs_count();
 
-    virtual const char *get_name() const;
+        virtual const char *get_description();
 
-    virtual const char *get_logo() const;
+        virtual const char *get_avatar();
 
-    virtual unsigned long Release();
+        virtual bool get_type();
 
-    virtual HRESULT QueryInterface(RIID riid, void** ppv);
-};
+        virtual const char *get_name();
 
-class XiamiAPI: public IXiamiAPI
-{
+        virtual unsigned long Release();
 
-private:
-    inline void updateCookie(const cpr::Cookies & cookie);
+        virtual HRESULT QueryInterface(RIID riid, void **ppv);
 
-    inline rapidjson::Document GetJson(const string & url, cpr::Header header);
+    };
 
-    string XiamiHtmlLogin(const string & email, const string & password, const string & validation);
+    struct XiamiArtistInfo : public IXiamiArtistInfo
+    {
+        XiamiArtistInfo() = default;
 
-    cpr::Cookies cookies;
-    string cookie_file_name;
-public:
-    bool IsLogin_impl();
+        XiamiArtistInfo(
+                const int64_t &artist_id,
+                const string &name,
+                const string &logo,
+                const string &count_likes
+        ) :
+                artist_id(artist_id),
+                name(name),
+                logo(logo),
+                count_likes(count_likes)
+        {}
 
-    XiamiAPI(const string & cookie_file_name = "cookies.txt");
+        int64_t artist_id;
+        string name;
+        string logo;
+        string count_likes;
 
-    XiamiUserInfo XiamiLogin_impl(const string &email, const string &password, const string &validation);
+        virtual int64_t get_artist_id() const;
 
-    string GetCaptcha_impl();
+        virtual const char *get_name() const;
 
-    vector<XiamiSongInfo> GetArtistHotSong_impl(const int &artist_id);
+        virtual const char *get_logo() const;
 
-    vector<XiamiPlaylistInfo> GetPlaylist_impl(const string &url);
+        virtual const char *get_count_likes() const;
 
-    vector<XiamiPlaylistInfo> GetPlaylist_impl(const int &id, const int &type);
+        virtual unsigned long Release();
 
-    vector<XiamiPlaylistInfo> GetUserRecommendPlaylist_impl();
+        virtual HRESULT QueryInterface(RIID riid, void **ppv);
 
-    vector<XiamiPlaylistInfo> GetRecommendPlaylist_impl();
+    };
 
-    vector<XiamiPlaylistInfo> GetCollectionPlaylist_impl(const int &collection_id);
+    struct XiamiArtistCategoryInfo : public IXiamiArtistCategoryInfo
+    {
+        XiamiArtistCategoryInfo() = default;
 
-    vector<XiamiPlaylistInfo> GetAlbumPlaylist_impl(const int &album_id);
+        XiamiArtistCategoryInfo(
+                const string &artist_class,
+                const string &artist_type,
+                const string &artist_name
+        ) :
+                artist_class(artist_class),
+                artist_type(artist_type),
+                artist_name(artist_name)
+        {}
 
-    vector<XiamiPlaylistInfo> GetSongPlaylist_impl(const int &song_id);
+        string artist_class;
+        string artist_type;
+        string artist_name;
 
-    string CaserDecode_impl(const string &val);
+        virtual const char *get_artist_class() const;
 
-    vector<XiamiCollectionInfo> GetRecommendCollection_impl();
+        virtual const char *get_artist_type() const;
 
-    string DecLocation_impl(const string &location);
+        virtual const char *get_artist_name() const;
 
-    vector<XiamiSongInfo> Search_impl(const string &key, const int &page = 1, const int &limit = 25);
+        virtual unsigned long Release();
 
-    XiamiSongInfo GetSong_impl(const string &song_id);
+        virtual HRESULT QueryInterface(RIID riid, void **ppv);
+    };
 
-    vector<XiamiArtistInfo> GetArtistHotList_impl(const int &artist_class, const int &artist_type);
+    struct XiamiHotSearchKeyInfo : public IXiamiHotSearchKeyInfo
+    {
+        XiamiHotSearchKeyInfo() = default;
 
-    vector<XiamiArtistCategoryInfo> GetArtistCategory_impl();
+        XiamiHotSearchKeyInfo(
+                const string &key,
+                const string &count
+        ) :
+                key(key),
+                count(count)
+        {}
 
-    vector<XiamiHotSearchKeyInfo> GetHotSearchKey_impl();
+        string key;
+        string count;
 
-    vector<XiamiRankInfo> GetRankList_impl();
+        virtual const char *get_key() const;
 
-    std::basic_string<char> get_file_from_url_impl(const string & url);
+        virtual const char *get_count() const;
 
-    virtual HRESULT IsLogin(bool * out);
+        virtual unsigned long Release();
 
-    virtual HRESULT XiamiLogin(
-            const char *email,                     // [in] email
-            const char *password,                  // [in] password
-            IXiamiUserInfo **out,                  // [out] user info
-            const char *validation = ""            // [in] validation code
-    );
+        virtual HRESULT QueryInterface(RIID riid, void **ppv);
+    };
 
-    virtual HRESULT GetCaptcha(
-            IStr ** out                             // [out] png format captcha data
-    );
+    struct XiamiRankInfo : public IXiamiRankInfo
+    {
 
-    virtual HRESULT GetArtistHotSong(
-            const int artist_id,                    // [in] artist id
-            IGenericArray ** out           // [out] array of song info
-    );
+        XiamiRankInfo() = default;
 
-    virtual HRESULT GetPlaylist(const int id,       // [in] playlist id
-                                const int type,                         // [in] playlist type,
-                                IGenericArray ** out                // [out] array of song
-    );
+        XiamiRankInfo(
+                const int64_t &id,
+                const string &name,
+                const string &logo
+        ) : id(id), name(name), logo(logo)
+        {}
 
-    virtual HRESULT GetUserRecommendPlaylist(
-            IGenericArray ** out                // [out] array of playlist, type `IXiamiPlaylistInfo`
-    );
+        int64_t id;
+        string name;
+        string logo;
 
-    virtual HRESULT GetRecommendPlaylist(
-            IGenericArray ** out                // [out] array of playlist, type `IXiamiPlaylistInfo`
-    );
+        virtual int64_t get_id() const;
 
-    virtual HRESULT GetCollectionPlaylist(
-            const int collection_id,            // [in] collection id
-            IGenericArray ** out                // [out] array of playlist, type `IXiamiPlaylistInfo`
-    );
+        virtual const char *get_name() const;
 
-    virtual HRESULT GetAlbumPlaylist(
-            const int album_id,                 // [in] album id
-            IGenericArray ** out                // [out] array of playlist, type `IXiamiPlaylistInfo`
-    );
+        virtual const char *get_logo() const;
 
-    virtual HRESULT GetSongPlaylist(
-            const int song_id,                  // [in] song id
-            IGenericArray ** out                // [out] array of playlist, type `IXiamiPlaylistInfo`
-    );
+        virtual unsigned long Release();
 
-    virtual HRESULT CaserDecode(
-            const char *val,                    // [in] original string
-            IStr ** out                         // [out] decode result
-    );
+        virtual HRESULT QueryInterface(RIID riid, void **ppv);
+    };
 
-    virtual HRESULT GetRecommendCollection(
-            IGenericArray ** out                // [out] array of collection info, type `IXiamiCollectionInfo`
-    );
+    struct XiamiAlbumInfo : public IXiamiAlbumInfo
+    {
+        XiamiAlbumInfo() = default;
 
-    virtual HRESULT DecLocation(
-            const char *location,               // [in] original location
-            IStr ** out                         // [out] real location
-    );
+        XiamiAlbumInfo(
+                bool is_check,
+                int64_t album_id,
+                int64_t artist_id,
+                string title,
+                string artist_name,
+                string album_logo,
+                int64_t gmt_publish,
+                bool is_play,
+                string grade,
+                string grade_count,
+                int64_t musician,
+                int64_t star,
+                int64_t album_status,
+                int64_t upgrade_role
+        ) :
+                is_check(is_check),
+                album_id(album_id),
+                artist_id(artist_id),
+                title(title),
+                artist_name(artist_name),
+                album_logo(album_logo),
+                gmt_publish(gmt_publish),
+                is_play(is_play),
+                grade(grade),
+                grade_count(grade_count),
+                musician(musician),
+                star(star),
+                album_status(album_status),
+                upgrade_role(upgrade_role)
+        {}
 
-    virtual HRESULT Search(
-            const char *key,                    // [in] search key utf8 encoded
-            IGenericArray ** out,               // [out] array of song info, type `IXiamiSongInfo`
-            const int page = 1,                 // [in] page number
-            const int limit = 25               // [in] count of search result per page
+        bool is_check;
+        int64_t album_id;
+        int64_t artist_id;
+        string title;
+        string artist_name;
+        string album_logo;
+        int64_t gmt_publish;
+        bool is_play;
+        string grade;
+        string grade_count;
+        int64_t musician;
+        int64_t star;
+        int64_t album_status;
+        int64_t upgrade_role;
 
-    );
 
-    virtual HRESULT GetSong(
-            const char *song_id,                // [in] song id
-            IXiamiSongInfo ** out                // [out] song info
-    );
+        virtual bool get_is_check() const;
 
-    virtual HRESULT GetArtistHotList(
-            const int artist_class,             // [in] artist class
-            const int artist_type,              // [in] artist type
-            IGenericArray ** out                // [out] array of artist info, type `IXiamiArtistInfo`
-    );
+        virtual int64_t get_album_id() const;
 
-    virtual HRESULT GetArtistCategory(
-            IGenericArray ** out                // [out] array of category info, type `IXiamiArtistCategoryInfo`
-    );
+        virtual int64_t get_artist_id() const;
 
-    virtual HRESULT GetHotSearchKey(
-            IGenericArray ** out                // [out] array of search key info, type `IXiamiHotSearchKeyInfo`
-    );
+        virtual const char *get_title() const;
 
-    virtual HRESULT GetRankList(
-            IGenericArray ** out                // [out] array of rank info, type `IXiamiRankInfo`
-    );
+        virtual const char *get_artist_name() const;
 
-    virtual HRESULT GetFileContentFromUrl(const char *url, IStr **out);
+        virtual const char *get_album_logo() const;
 
-    virtual unsigned long Release();
+        virtual int64_t get_gmt_publish() const;
 
-    virtual HRESULT QueryInterface(RIID riid, void ** ppv);
-};
+        virtual bool get_is_play() const;
+
+        virtual const char *get_grade() const;
+
+        virtual const char *get_grade_count() const;
+
+        virtual int64_t get_musician() const;
+
+        virtual int64_t get_star() const;
+
+        virtual int64_t get_album_status() const;
+
+        virtual int64_t get_upgrade_role() const;
+
+        unsigned long Release();
+
+        HRESULT QueryInterface(RIID riid, void **ppv);
+    };
+
+    class XiamiAPI : public IXiamiAPI
+    {
+
+    private:
+        inline void updateCookie(const cpr::Cookies &cookie);
+
+        inline rapidjson::Document GetJson(const string &url, cpr::Header header);
+
+        string XiamiHtmlLogin(const string &email, const string &password, const string &validation);
+
+        cpr::Cookies cookies;
+        string cookie_file_name;
+    public:
+        bool IsLogin_impl();
+
+        XiamiAPI(const string &cookie_file_name = "cookies.txt");
+
+        XiamiUserInfo XiamiLogin_impl(const string &email, const string &password, const string &validation);
+
+        string GetCaptcha_impl();
+
+        vector<XiamiSongInfo> GetArtistHotSong_impl(const int &artist_id);
+
+        vector<XiamiPlaylistInfo> GetPlaylist_impl(const string &url);
+
+        vector<XiamiPlaylistInfo> GetPlaylist_impl(const int &id, const int &type);
+
+        vector<XiamiPlaylistInfo> GetUserRecommendPlaylist_impl();
+
+        vector<XiamiPlaylistInfo> GetRecommendPlaylist_impl();
+
+        vector<XiamiPlaylistInfo> GetCollectionPlaylist_impl(const int &collection_id);
+
+        vector<XiamiPlaylistInfo> GetAlbumPlaylist_impl(const int &album_id);
+
+        vector<XiamiPlaylistInfo> GetSongPlaylist_impl(const int &song_id);
+
+        string CaserDecode_impl(const string &val);
+
+        vector<XiamiCollectionInfo> GetRecommendCollection_impl();
+
+        string DecLocation_impl(const string &location);
+
+        vector<XiamiSongInfo> Search_impl(const string &key, const int &page = 1, const int &limit = 25);
+
+        XiamiSongInfo GetSong_impl(const string &song_id);
+
+        vector<XiamiArtistInfo> GetArtistHotList_impl(const int &artist_class, const int &artist_type);
+
+        vector<XiamiArtistCategoryInfo> GetArtistCategory_impl();
+
+        vector<XiamiHotSearchKeyInfo> GetHotSearchKey_impl();
+
+        vector<XiamiRankInfo> GetRankList_impl();
+
+        std::basic_string<char> get_file_from_url_impl(const string &url);
+
+        vector<XiamiCollectionFullInfo> SearchCollection_impl(std::string key, const int &page = 1);
+
+        vector<XiamiAlbumInfo> SearchAlbum_impl(std::string key, const int &page = 1);
+
+        virtual HRESULT IsLogin(bool *out);
+
+        virtual HRESULT XiamiLogin(
+                const char *email,                     // [in] email
+                const char *password,                  // [in] password
+                IXiamiUserInfo **out,                  // [out] user info
+                const char *validation = ""            // [in] validation code
+        );
+
+        virtual HRESULT GetCaptcha(
+                IStr **out                             // [out] png format captcha data
+        );
+
+        virtual HRESULT GetArtistHotSong(
+                const int artist_id,                    // [in] artist id
+                IGenericArray **out           // [out] array of song info
+        );
+
+        virtual HRESULT GetPlaylist(const int id,       // [in] playlist id
+                                    const int type,                         // [in] playlist type,
+                                    IGenericArray **out                // [out] array of song
+        );
+
+        virtual HRESULT GetUserRecommendPlaylist(
+                IGenericArray **out                // [out] array of playlist, type `IXiamiPlaylistInfo`
+        );
+
+        virtual HRESULT GetRecommendPlaylist(
+                IGenericArray **out                // [out] array of playlist, type `IXiamiPlaylistInfo`
+        );
+
+        virtual HRESULT GetCollectionPlaylist(
+                const int collection_id,            // [in] collection id
+                IGenericArray **out                // [out] array of playlist, type `IXiamiPlaylistInfo`
+        );
+
+        virtual HRESULT GetAlbumPlaylist(
+                const int album_id,                 // [in] album id
+                IGenericArray **out                // [out] array of playlist, type `IXiamiPlaylistInfo`
+        );
+
+        virtual HRESULT GetSongPlaylist(
+                const int song_id,                  // [in] song id
+                IGenericArray **out                // [out] array of playlist, type `IXiamiPlaylistInfo`
+        );
+
+        virtual HRESULT CaserDecode(
+                const char *val,                    // [in] original string
+                IStr **out                         // [out] decode result
+        );
+
+        virtual HRESULT GetRecommendCollection(
+                IGenericArray **out                // [out] array of collection info, type `IXiamiCollectionInfo`
+        );
+
+        virtual HRESULT DecLocation(
+                const char *location,               // [in] original location
+                IStr **out                         // [out] real location
+        );
+
+        virtual HRESULT Search(
+                const char *key,                    // [in] search key utf8 encoded
+                IGenericArray **out,               // [out] array of song info, type `IXiamiSongInfo`
+                const int page = 1,                 // [in] page number
+                const int limit = 25               // [in] count of search result per page
+
+        );
+
+        virtual HRESULT GetSong(
+                const char *song_id,                // [in] song id
+                IXiamiSongInfo **out                // [out] song info
+        );
+
+        virtual HRESULT GetArtistHotList(
+                const int artist_class,             // [in] artist class
+                const int artist_type,              // [in] artist type
+                IGenericArray **out                // [out] array of artist info, type `IXiamiArtistInfo`
+        );
+
+        virtual HRESULT GetArtistCategory(
+                IGenericArray **out                // [out] array of category info, type `IXiamiArtistCategoryInfo`
+        );
+
+        virtual HRESULT GetHotSearchKey(
+                IGenericArray **out                // [out] array of search key info, type `IXiamiHotSearchKeyInfo`
+        );
+
+        virtual HRESULT GetRankList(
+                IGenericArray **out                // [out] array of rank info, type `IXiamiRankInfo`
+        );
+
+        virtual HRESULT SearchCollection(const char * key,
+                                         IGenericArray **out,
+                                         const int page = 1);
+
+        virtual HRESULT SearchAlbum(const char * key,
+                                    IGenericArray **out,
+                                    const int &page = 1);
+
+        virtual HRESULT GetFileContentFromUrl(const char *url, IStr **out);
+
+        virtual unsigned long Release();
+
+        virtual HRESULT QueryInterface(RIID riid, void **ppv);
+    };
 }
 #endif // XIAMIAPI_IMPL_H
