@@ -363,13 +363,13 @@ namespace xiamiapi
                 IStr **out                         // [out] file content
         ) = 0;
 
-        virtual HRESULT SearchCollection(const char * key,
-                                         IGenericArray **out,
-                                         const int page = 1) = 0;
+        virtual HRESULT SearchCollection(const char * key,      // [in] search key
+                                         IGenericArray **out,   // [out] array of collection info type `IXiamiCollectionFullInfo`
+                                         const int page = 1) = 0; // [in] page count
 
-        virtual HRESULT SearchAlbum(const char * key,
-                                    IGenericArray **out,
-                                    const int &page = 1) = 0;
+        virtual HRESULT SearchAlbum(const char * key,           // [in] search key
+                                    IGenericArray **out,        // [out] array of album info type `IXiamiAlbumInfo`
+                                    const int &page = 1) = 0;   // [in] page count
 
         constexpr static const char *IID()
         {
