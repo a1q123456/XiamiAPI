@@ -25,7 +25,7 @@ make -j4
 * CaserDecode
 * GetRecommendCollection
 * DecLocation
-* Search
+* SearchSong
 * GetSong
 * GetArtistHotList
 * GetArtistCategory
