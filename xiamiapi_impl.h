@@ -59,7 +59,7 @@ namespace xiamiapi
 
         virtual const char *get_numlevel() const;
 
-        virtual unsigned long Release();
+        virtual uint64_t Release();
 
         virtual HRESULT QueryInterface(RIID riid, void **ppv);
     };
@@ -178,7 +178,7 @@ namespace xiamiapi
 
         virtual const char *get_album_pic() const;
 
-        virtual unsigned long Release();
+        virtual uint64_t Release();
 
         virtual HRESULT QueryInterface(RIID riid, void **ppv);
 
@@ -239,7 +239,7 @@ namespace xiamiapi
 
         virtual bool get_need_pay() const;
 
-        virtual unsigned long Release();
+        virtual uint64_t Release();
 
         virtual HRESULT QueryInterface(RIID riid, void **ppv);
 
@@ -277,7 +277,7 @@ namespace xiamiapi
 
         virtual const char *get_user_name() const;
 
-        virtual unsigned long Release();
+        virtual uint64_t Release();
 
         virtual HRESULT QueryInterface(RIID riid, void **ppv);
 
@@ -444,10 +444,64 @@ namespace xiamiapi
 
         virtual const char *get_name();
 
-        virtual unsigned long Release();
+        virtual uint64_t Release();
 
         virtual HRESULT QueryInterface(RIID riid, void **ppv);
 
+    };
+
+    struct XiamiArtistFullInfo: public IXiamiArtistFullInfo
+    {
+        XiamiArtistFullInfo() = default;
+
+        XiamiArtistFullInfo(
+                const int64_t &artist_id,
+                const string &artist_name,
+                const string &image,
+                const string &alias,
+                const string &area,
+                const string &gender,
+                const string &description,
+                const string &count_likes
+        ):
+                artist_id(artist_id),
+                artist_name(artist_name),
+                image(image),
+                alias(alias),
+                area(area),
+                gender(gender),
+                description(description),
+                count_likes(count_likes)
+                {}
+        
+        int64_t artist_id;
+        string artist_name;
+        string image;
+        string alias;
+        string area;
+        string gender;
+        string description;
+        string count_likes;
+
+        virtual int64_t get_artist_id() const;
+
+        virtual const char *get_artist_name() const;
+
+        virtual const char *get_image() const;
+
+        virtual const char * get_alias() const;
+
+        virtual const char * get_area() const;
+
+        virtual const char * get_gender() const;
+
+        virtual const char * get_description() const;
+
+        virtual const char *get_count_likes() const;
+
+        virtual HRESULT QueryInterface(RIID riid, void **ppv);
+
+        virtual uint64_t Release();
     };
 
     struct XiamiArtistInfo : public IXiamiArtistInfo
@@ -479,7 +533,7 @@ namespace xiamiapi
 
         virtual const char *get_count_likes() const;
 
-        virtual unsigned long Release();
+        virtual uint64_t Release();
 
         virtual HRESULT QueryInterface(RIID riid, void **ppv);
 
@@ -509,7 +563,7 @@ namespace xiamiapi
 
         virtual const char *get_artist_name() const;
 
-        virtual unsigned long Release();
+        virtual uint64_t Release();
 
         virtual HRESULT QueryInterface(RIID riid, void **ppv);
     };
@@ -533,7 +587,7 @@ namespace xiamiapi
 
         virtual const char *get_count() const;
 
-        virtual unsigned long Release();
+        virtual uint64_t Release();
 
         virtual HRESULT QueryInterface(RIID riid, void **ppv);
     };
@@ -560,7 +614,7 @@ namespace xiamiapi
 
         virtual const char *get_logo() const;
 
-        virtual unsigned long Release();
+        virtual uint64_t Release();
 
         virtual HRESULT QueryInterface(RIID riid, void **ppv);
     };
@@ -645,7 +699,7 @@ namespace xiamiapi
 
         virtual int64_t get_upgrade_role() const;
 
-        unsigned long Release();
+        uint64_t Release();
 
         HRESULT QueryInterface(RIID riid, void **ppv);
     };
@@ -693,7 +747,7 @@ namespace xiamiapi
 
         string DecLocation_impl(const string &location);
 
-        vector<XiamiSongInfo> Search_impl(const string &key, const int64_t &page = 1, const int64_t &limit = 25);
+        vector<XiamiSongInfo> SearchSong_impl(const string &key, const int64_t &page = 1, const int64_t &limit = 25);
 
         XiamiSongInfo GetSong_impl(const string &song_id);
 
@@ -710,6 +764,8 @@ namespace xiamiapi
         vector<XiamiCollectionFullInfo> SearchCollection_impl(std::string key, const int64_t &page = 1);
 
         vector<XiamiAlbumInfo> SearchAlbum_impl(std::string key, const int64_t &page = 1);
+
+        vector<XiamiArtistFullInfo> SearchArtist_impl(const char * key, const int64_t &page = 1);
 
         virtual HRESULT IsLogin(bool *out);
 
@@ -771,7 +827,7 @@ namespace xiamiapi
                 IStr **out                         // [out] real location
         );
 
-        virtual HRESULT Search(
+        virtual HRESULT SearchSong(
                 const char *key,                    // [in] search key utf8 encoded
                 IGenericArray **out,               // [out] array of song info, type `IXiamiSongInfo`
                 const int64_t page = 1,                 // [in] page number
@@ -808,11 +864,15 @@ namespace xiamiapi
 
         virtual HRESULT SearchAlbum(const char * key,
                                     IGenericArray **out,
-                                    const int64_t &page = 1);
+                                    const int64_t page = 1);
+
+        virtual HRESULT SearchArtist(const char * key,
+                                     IGenericArray **out,
+                                     const int64_t page = 1);
 
         virtual HRESULT GetFileContentFromUrl(const char *url, IStr **out);
 
-        virtual unsigned long Release();
+        virtual uint64_t Release();
 
         virtual HRESULT QueryInterface(RIID riid, void **ppv);
     };

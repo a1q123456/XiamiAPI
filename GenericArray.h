@@ -42,8 +42,8 @@ namespace xiamiapi
         GenericArray& operator=(GenericArray&& other) = delete;
 
         virtual IUnknown * get_element(uint64_t  index);
-        virtual uint64_t  length();
-        virtual uint64_t  Release();
+        virtual uint64_t length();
+        virtual uint64_t Release();
         virtual RIID ElementIID();
 
         virtual HRESULT QueryInterface(RIID riid, void** ppv);

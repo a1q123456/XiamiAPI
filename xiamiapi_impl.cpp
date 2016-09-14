@@ -320,7 +320,7 @@ namespace xiamiapi
         return ret;
     }
 
-    vector<XiamiSongInfo> XiamiAPI::Search_impl(const string &key, const int64_t &page, const int64_t &limit)
+    vector<XiamiSongInfo> XiamiAPI::SearchSong_impl(const string &key, const int64_t &page, const int64_t &limit)
     {
         auto escaped_key = StringUtilities::url_escape(key, false);
         auto api_url = StringUtilities::string_format(
@@ -538,6 +538,37 @@ namespace xiamiapi
                     data[i]["star"].GetInt64(),
                     data[i]["album_status"].GetInt64(),
                     data[i]["upgrade_role"].GetInt64()
+            ));
+        }
+        return ret;
+    }
+
+    vector<XiamiArtistFullInfo> XiamiAPI::SearchArtist_impl(const char * key, const int64_t &page)
+    {
+        vector<XiamiArtistFullInfo> ret;
+        cpr::Response result = NetworkThrowIfFailed(cpr::Post(
+                cpr::Url{"http://www.xiami.com/app/xiating/search-artist2"},
+                cpr::Payload{{"key",      key},
+                             {"callback", "xiami"},
+                             {"page",     StringUtilities::to_string(page)}},
+                cpr::Cookies{{"_xiamitoken", cookies["_xiamitoken"]},
+                             {"av",          "4.5"}}
+        ));
+        updateCookie(result.cookies);
+        rapidjson::Document json;
+        json.Parse(result.text.c_str());
+        rapidjson::Value & data = json["data"];
+        for (rapidjson::SizeType i = 0; i < data.Size(); i++)
+        {
+            ret.push_back(XiamiArtistFullInfo(
+                    data[i]["artist_id"].GetInt64(),
+                    data[i]["artist_name"].GetString(),
+                    data[i]["image_d_o"].IsNull()?"": data[i]["image_d_o"]["path"].GetString(),
+                    data[i]["alias"].GetString(),
+                    data[i]["area"].GetString(),
+                    data[i]["gender"].GetString(),
+                    data[i]["description"].GetString(),
+                    std::to_string(data[i]["count_likes"].GetInt64())
             ));
         }
         return ret;
@@ -768,11 +799,11 @@ namespace xiamiapi
         }
     }
 
-    HRESULT XiamiAPI::Search(const char *key, IGenericArray **out, const int64_t page, const int64_t limit)
+    HRESULT XiamiAPI::SearchSong(const char *key, IGenericArray **out, const int64_t page, const int64_t limit)
     {
         try
         {
-            *out = new GenericArray(Search_impl(key, page, limit), __uuidof(IXiamiSongInfo));
+            *out = new GenericArray(SearchSong_impl(key, page, limit), __uuidof(IXiamiSongInfo));
             return S_OK;
         }
         catch (NetworkException)
@@ -931,11 +962,28 @@ namespace xiamiapi
         }
     }
 
-    HRESULT XiamiAPI::SearchAlbum(const char *key, IGenericArray **out, const int64_t &page)
+    HRESULT XiamiAPI::SearchAlbum(const char *key, IGenericArray **out, const int64_t page)
     {
         try
         {
             *out = new GenericArray(SearchAlbum_impl(key, page), __uuidof(XiamiAlbumInfo));
+            return S_OK;
+        }
+        catch (NetworkException)
+        {
+            return 1001UL;
+        }
+        catch (...)
+        {
+            return FAIL;
+        }
+    }
+
+    HRESULT XiamiAPI::SearchArtist(const char *key, IGenericArray **out, const int64_t page)
+    {
+        try
+        {
+            *out = new GenericArray(SearchArtist_impl(key, page), __uuidof(XiamiArtistFullInfo));
             return S_OK;
         }
         catch (NetworkException)
@@ -1695,6 +1743,73 @@ namespace xiamiapi
         *ppv = nullptr;
         return E_NOINTERFACE;
     }
+
+    int64_t XiamiArtistFullInfo::get_artist_id() const
+    {
+        return artist_id;
+    }
+
+    const char * XiamiArtistFullInfo::get_artist_name() const 
+    {
+        return artist_name.c_str();
+    }
+
+    const char * XiamiArtistFullInfo::get_image() const 
+    {
+        return image.c_str();
+    }
+
+    const char * XiamiArtistFullInfo::get_alias() const 
+    {
+        return alias.c_str();
+    }
+
+    const char * XiamiArtistFullInfo::get_area() const 
+    {
+        return area.c_str();
+    }
+
+    const char * XiamiArtistFullInfo::get_gender() const 
+    {
+        return gender.c_str();
+    }
+
+    const char * XiamiArtistFullInfo::get_description() const 
+    {
+        return description.c_str();
+    }
+
+    const char * XiamiArtistFullInfo::get_count_likes() const 
+    {
+        return count_likes.c_str();
+    }
+
+    uint64_t XiamiArtistFullInfo::Release()
+    {
+        if (--m_Ref == 0)
+        {
+            delete this;
+            return 0;
+        }
+        return 1;
+    }
+
+    HRESULT XiamiArtistFullInfo::QueryInterface(RIID riid, void **ppv)
+    {
+        if (ppv == nullptr)
+        {
+            return E_INVALIDARG;
+        }
+        if (riid == IID_IUnknown || riid == __uuidof(XiamiArtistFullInfo))
+        {
+            *ppv = (IUnknown *) this;
+            AddRef();
+            return S_OK;
+        }
+        *ppv = nullptr;
+        return E_NOINTERFACE;
+    }
+
 }
 
 

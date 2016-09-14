@@ -1,5 +1,5 @@
 # XiamiAPI
-###A most comprehensive COM style xiami c++ api
+A most comprehensive COM style xiami c++ api
 
 ## Compile
 ```shell
@@ -11,12 +11,37 @@ cmake ..
 make -j4
 ```
 
+## Full Api List
+
+* XiamiLogin
+* GetCaptcha
+* GetArtistHotSong
+* GetPlaylist
+* GetUserRecommendPlaylist
+* GetRecommendPlaylist
+* GetCollectionPlaylist
+* GetAlbumPlaylist
+* GetSongPlaylist
+* CaserDecode
+* GetRecommendCollection
+* DecLocation
+* Search
+* GetSong
+* GetArtistHotList
+* GetArtistCategory
+* GetHotSearchKey
+* GetRankList
+* GetFileContentFromUrl
+* SearchCollection
+* SearchAlbum
+* SearchArtist
+
 ## Usage
 
-copy iunknow.h xiamiapi.h to your include dir and libxiamiapi.so libcurl.so to your lib dir
+copy `iunknow.h` `xiamiapi.h` to your include path and `libxiamiapi.so` `libcurl.so` to your lib path
 
 ### Login
-
+perform login
 ```C++
 #include "xiamiapi.h"
 
@@ -34,16 +59,19 @@ if (hr == 1002UL)
   fstream fs("captcha.png");
   fs.seekp(0);
   fs.write(captcha_data->c_str(), captcha_data->length());
+  captcha_data->Release();
 }
 hr = api->XiamiLogin("xxx@xxx.com", "password", "captcha");
+api->Release();
 ```
 
 ### Get Artist Hot Song
+input a artist id then get artist hot song
 ```C++
 IGenericArray * list;
-int jonathan_lee_id = 573
+uint64_t jonathan_lee_id = 573
 api->GetArtistHotSong(jonathan_lee_id, &list);
-for (unsigned long i = 0; i < list->length(); i++)
+for (uint64_t i = 0; i < list->length(); i++)
 {
   xiamiapi::IXiamiSongInfo* info;
   list->get_element(i)->QueryInterface(list->ElementIID(), (void **)&info);
@@ -53,6 +81,7 @@ for (unsigned long i = 0; i < list->length(); i++)
   ...
   info->Release();
 }
+list->Release();
 api->Release();
 
 // Or use smart pointer to manage com resource
@@ -62,9 +91,9 @@ api->Release();
 
 ```C++
 IGenericArray * list;
-int playlist_id = 1
+uint64_t playlist_id = 1
 api->GetPlaylist(playlist_id, &list);
-for (unsigned long i = 0; i < list->length(); i++)
+for (uint64_t i = 0; i < list->length(); i++)
 {
   xiamiapi::IXiamiPlaylistInfo* info;
   list->get_element(i)->QueryInterface(list->ElementIID(), (void **)&info);
@@ -74,10 +103,13 @@ for (unsigned long i = 0; i < list->length(); i++)
   ...
   info->Release();
 }
+list->Release();
 api->Release();
 
 // Or use smart pointer to manage com resource
 ```
+
+The usage of another api just like above 
 
 More detail avaliable in [wiki](https://github.com/a1q123456/XiamiAPI/wiki)
 
