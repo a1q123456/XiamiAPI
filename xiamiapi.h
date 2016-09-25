@@ -14,7 +14,7 @@ namespace xiamiapi
 
     struct IXiamiUserInfo : public IUnknown
     {
-        virtual const char *get_user_id() const = 0;
+        virtual uint64_t get_user_id() const = 0;
 
         virtual const char *get_nick_name() const = 0;
 
@@ -39,13 +39,13 @@ namespace xiamiapi
 
     struct IXiamiPlaylistInfo : public IUnknown
     {
-        virtual const char *get_song_id() const = 0;
+        virtual uint64_t get_song_id() const = 0;
 
         virtual const char *get_sub_name() const = 0;
 
-        virtual const char *get_album_id() const = 0;
+        virtual uint64_t get_album_id() const = 0;
 
-        virtual const char *get_artist_id() const = 0;
+        virtual uint64_t get_artist_id() const = 0;
 
         virtual const char *get_artist() const = 0;
 
@@ -88,15 +88,15 @@ namespace xiamiapi
 
     struct IXiamiSongInfo : public IUnknown
     {
-        virtual const char *get_song_id() const = 0;
+        virtual uint64_t get_song_id() const = 0;
 
         virtual const char *get_song_name() const = 0;
 
-        virtual const char *get_album_id() const = 0;
+        virtual uint64_t get_album_id() const = 0;
 
         virtual const char *get_album_name() const = 0;
 
-        virtual const char *get_artist_id() const = 0;
+        virtual uint64_t get_artist_id() const = 0;
 
         virtual const char *get_artist_name() const = 0;
 
@@ -114,7 +114,7 @@ namespace xiamiapi
 
     struct IXiamiCollectionInfo : public IUnknown
     {
-        virtual const char * get_list_id() const = 0;
+        virtual uint64_t get_list_id() const = 0;
         virtual const char * get_collect_name() const = 0;
         virtual const char * get_user_name() const = 0;
         virtual const char * get_logo() const = 0;
@@ -362,7 +362,7 @@ namespace xiamiapi
         ) = 0;
 
         virtual HRESULT GetSong(
-                const char *song_id,                // [in] song id
+                const uint64_t song_id,                // [in] song id
                 IXiamiSongInfo ** out                // [out] song info
         ) = 0;
 

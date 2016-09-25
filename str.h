@@ -14,6 +14,8 @@ class Str: public IStr
 private:
     char * data;
     uint64_t m_length;
+
+    int64_t m_Ref = 1;
 public:
     Str(const std::string &other);
 
@@ -27,6 +29,8 @@ public:
     Str& operator=(const Str& other) = delete;
 
     Str& operator=(Str&& other) = delete;
+
+    virtual uint64_t AddRef();
 
     virtual uint64_t Release();
 

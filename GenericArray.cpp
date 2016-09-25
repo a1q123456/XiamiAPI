@@ -21,7 +21,7 @@ uint64_t xiamiapi::GenericArray::Release()
         for (uint64_t i = 0; i < length(); i++)
         {
             auto tmp = get_element(i);
-            tmp->Release();
+            tmp->~IUnknown();
         }
         delete[] data;
         delete this;
@@ -49,4 +49,10 @@ HRESULT xiamiapi::GenericArray::QueryInterface(RIID riid, void **ppv)
 RIID xiamiapi::GenericArray::ElementIID()
 {
     return riid;
+}
+
+uint64_t xiamiapi::GenericArray::AddRef()
+{
+    ++m_Ref;
+    return 0;
 }

@@ -18,11 +18,12 @@ namespace xiamiapi
         uint64_t  m_length;
         uint64_t  sizeof_element;
         RIID riid;
+
+        int64_t m_Ref = 1;
     public:
         template <class T>
         GenericArray(const std::vector<T> &other, RIID riid): riid(riid)
         {
-
             sizeof_element = sizeof(T);
             data = new char[sizeof_element * other.size()];
 
@@ -45,7 +46,7 @@ namespace xiamiapi
         virtual uint64_t length();
         virtual uint64_t Release();
         virtual RIID ElementIID();
-
+        virtual uint64_t AddRef();
         virtual HRESULT QueryInterface(RIID riid, void** ppv);
     };
 }

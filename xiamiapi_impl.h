@@ -23,9 +23,10 @@ namespace xiamiapi
     struct XiamiUserInfo : public IXiamiUserInfo
     {
 
+        int64_t m_Ref = 1;
         XiamiUserInfo() = default;
 
-        XiamiUserInfo(const string &user_id, const string &nick_name, const string &avatar,
+        XiamiUserInfo(const uint64_t &user_id, const string &nick_name, const string &avatar,
                       const string isMusician, const string isVip, const string &credits,
                       const string &level, const string numlevel) :
                 user_id(user_id), nick_name(nick_name), avatar(avatar), isMusician(isMusician),
@@ -34,7 +35,7 @@ namespace xiamiapi
 
         }
 
-        string user_id;
+        uint64_t user_id;
         string nick_name;
         string avatar;
         string isMusician;
@@ -43,7 +44,7 @@ namespace xiamiapi
         string level;
         string numlevel;
 
-        virtual const char *get_user_id() const;
+        virtual uint64_t get_user_id() const;
 
         virtual const char *get_nick_name() const;
 
@@ -62,17 +63,19 @@ namespace xiamiapi
         virtual uint64_t Release();
 
         virtual HRESULT QueryInterface(RIID riid, void **ppv);
+        virtual uint64_t AddRef();
     };
 
     struct XiamiPlaylistInfo : public IXiamiPlaylistInfo
     {
         XiamiPlaylistInfo() = default;
 
+        int64_t m_Ref = 1;
         XiamiPlaylistInfo(
-                const string &song_id,
+                const uint64_t &song_id,
                 const string &sub_name,
-                const string &album_id,
-                const string &artist_id,
+                const uint64_t &album_id,
+                const uint64_t &artist_id,
                 const string &artist,
                 const string &singers,
                 // const vector<string> & singer_ids,
@@ -114,10 +117,10 @@ namespace xiamiapi
                 album_pic(album_pic)
         {}
 
-        string song_id;
+        uint64_t song_id;
         string sub_name;
-        string album_id;
-        string artist_id;
+        uint64_t album_id;
+        uint64_t artist_id;
         string artist;
         string singers;
         // vector<string> singer_ids;
@@ -137,13 +140,13 @@ namespace xiamiapi
         string album_pic;
 
 
-        virtual const char *get_song_id() const;
+        virtual uint64_t get_song_id() const;
 
         virtual const char *get_sub_name() const;
 
-        virtual const char *get_album_id() const;
+        virtual uint64_t get_album_id() const;
 
-        virtual const char *get_artist_id() const;
+        virtual uint64_t get_artist_id() const;
 
         virtual const char *get_artist() const;
 
@@ -182,18 +185,20 @@ namespace xiamiapi
 
         virtual HRESULT QueryInterface(RIID riid, void **ppv);
 
+        virtual uint64_t AddRef();
     };
 
     struct XiamiSongInfo : public IXiamiSongInfo
     {
         XiamiSongInfo() = default;
 
+        int64_t m_Ref = 1;
         XiamiSongInfo(
-                const string &song_id,
+                const uint64_t &song_id,
                 const string &song_name,
-                const string &album_id,
+                const uint64_t &album_id,
                 const string &album_name,
-                const string &artist_id,
+                const uint64_t &artist_id,
                 const string &artist_name,
                 const string &singers,
                 const string &listen_file,
@@ -210,26 +215,26 @@ namespace xiamiapi
                 need_pay(need_pay)
         {}
 
-        string song_id;
+        uint64_t song_id;
         string song_name;
-        string album_id;
+        uint64_t album_id;
         string album_name;
-        string artist_id;
+        uint64_t artist_id;
         string artist_name;
         string singers;
         string listen_file;
         bool need_pay;
 
 
-        virtual const char *get_song_id() const;
+        virtual uint64_t get_song_id() const;
 
         virtual const char *get_song_name() const;
 
-        virtual const char *get_album_id() const;
+        virtual uint64_t get_album_id() const;
 
         virtual const char *get_album_name() const;
 
-        virtual const char *get_artist_id() const;
+        virtual uint64_t get_artist_id() const;
 
         virtual const char *get_artist_name() const;
 
@@ -243,14 +248,16 @@ namespace xiamiapi
 
         virtual HRESULT QueryInterface(RIID riid, void **ppv);
 
+        virtual uint64_t AddRef();
     };
 
     struct XiamiCollectionInfo : public IXiamiCollectionInfo
     {
         XiamiCollectionInfo() = default;
 
+        int64_t m_Ref = 1;
         XiamiCollectionInfo(
-                const string &list_id,
+                const uint64_t &list_id,
                 const string &collect_name,
                 const string &logo,
                 const string &user_name
@@ -263,13 +270,13 @@ namespace xiamiapi
 
         }
 
-        string list_id;
+        uint64_t list_id;
         string collect_name;
         string user_name;
         string logo;
 
 
-        virtual const char *get_list_id() const;
+        virtual uint64_t get_list_id() const;
 
         virtual const char *get_collect_name() const;
 
@@ -281,11 +288,13 @@ namespace xiamiapi
 
         virtual HRESULT QueryInterface(RIID riid, void **ppv);
 
+        virtual uint64_t AddRef();
     };
 
     struct XiamiCollectionFullInfo : public IXiamiCollectionFullInfo
     {
 
+        int64_t m_Ref = 1;
         XiamiCollectionFullInfo(
                 const bool &is_help,
                 const bool &is_public,
@@ -448,12 +457,14 @@ namespace xiamiapi
 
         virtual HRESULT QueryInterface(RIID riid, void **ppv);
 
+        virtual uint64_t AddRef();
     };
 
     struct XiamiArtistFullInfo: public IXiamiArtistFullInfo
     {
         XiamiArtistFullInfo() = default;
 
+        int64_t m_Ref = 1;
         XiamiArtistFullInfo(
                 const int64_t &artist_id,
                 const string &artist_name,
@@ -502,12 +513,14 @@ namespace xiamiapi
         virtual HRESULT QueryInterface(RIID riid, void **ppv);
 
         virtual uint64_t Release();
+        virtual uint64_t AddRef();
     };
 
     struct XiamiArtistInfo : public IXiamiArtistInfo
     {
         XiamiArtistInfo() = default;
 
+        int64_t m_Ref = 1;
         XiamiArtistInfo(
                 const int64_t &artist_id,
                 const string &name,
@@ -537,12 +550,14 @@ namespace xiamiapi
 
         virtual HRESULT QueryInterface(RIID riid, void **ppv);
 
+        virtual uint64_t AddRef();
     };
 
     struct XiamiArtistCategoryInfo : public IXiamiArtistCategoryInfo
     {
         XiamiArtistCategoryInfo() = default;
 
+        int64_t m_Ref = 1;
         XiamiArtistCategoryInfo(
                 const string &artist_class,
                 const string &artist_type,
@@ -566,12 +581,14 @@ namespace xiamiapi
         virtual uint64_t Release();
 
         virtual HRESULT QueryInterface(RIID riid, void **ppv);
+        virtual uint64_t AddRef();
     };
 
     struct XiamiHotSearchKeyInfo : public IXiamiHotSearchKeyInfo
     {
         XiamiHotSearchKeyInfo() = default;
 
+        int64_t m_Ref = 1;
         XiamiHotSearchKeyInfo(
                 const string &key,
                 const string &count
@@ -590,6 +607,7 @@ namespace xiamiapi
         virtual uint64_t Release();
 
         virtual HRESULT QueryInterface(RIID riid, void **ppv);
+        virtual uint64_t AddRef();
     };
 
     struct XiamiRankInfo : public IXiamiRankInfo
@@ -597,6 +615,7 @@ namespace xiamiapi
 
         XiamiRankInfo() = default;
 
+        int64_t m_Ref = 1;
         XiamiRankInfo(
                 const int64_t &id,
                 const string &name,
@@ -617,12 +636,14 @@ namespace xiamiapi
         virtual uint64_t Release();
 
         virtual HRESULT QueryInterface(RIID riid, void **ppv);
+        virtual uint64_t AddRef();
     };
 
     struct XiamiAlbumInfo : public IXiamiAlbumInfo
     {
         XiamiAlbumInfo() = default;
 
+        int64_t m_Ref = 1;
         XiamiAlbumInfo(
                 bool is_check,
                 int64_t album_id,
@@ -702,12 +723,15 @@ namespace xiamiapi
         uint64_t Release();
 
         HRESULT QueryInterface(RIID riid, void **ppv);
+        virtual uint64_t AddRef();
     };
 
     class XiamiAPI : public IXiamiAPI
     {
 
     private:
+
+        int64_t m_Ref = 1;
         inline void updateCookie(const cpr::Cookies &cookie);
 
         inline rapidjson::Document GetJson(const string &url, cpr::Header header);
@@ -749,7 +773,7 @@ namespace xiamiapi
 
         vector<XiamiSongInfo> SearchSong_impl(const string &key, const int64_t &page = 1, const int64_t &limit = 25);
 
-        XiamiSongInfo GetSong_impl(const string &song_id);
+        XiamiSongInfo GetSong_impl(const uint64_t &song_id);
 
         vector<XiamiArtistInfo> GetArtistHotList_impl(const int64_t &artist_class, const int64_t &artist_type);
 
@@ -836,7 +860,7 @@ namespace xiamiapi
         );
 
         virtual HRESULT GetSong(
-                const char *song_id,                // [in] song id
+                const uint64_t song_id,                // [in] song id
                 IXiamiSongInfo **out                // [out] song info
         );
 
@@ -875,6 +899,9 @@ namespace xiamiapi
         virtual uint64_t Release();
 
         virtual HRESULT QueryInterface(RIID riid, void **ppv);
+
+        virtual uint64_t AddRef();
+
     };
 }
 #endif // XIAMIAPI_IMPL_H

@@ -10,7 +10,7 @@ add_subdirectory(cpr)
 include_directories(${CPR_INCLUDE_DIRS})
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/rapidjson/include)
-
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/cpr/opt/googletest/include)
 
 set(SOURCE_FILES
         needvalidationexception.cpp
@@ -28,8 +28,11 @@ set(SOURCE_FILES
         str.h
         GenericArray.cpp
         GenericArray.h
-        iunknown.cpp keynotfoundexception.cpp keynotfoundexception.h)
+        iunknown.cpp keynotfoundexception.cpp keynotfoundexception.h test/apitest.cpp)
 
 add_library(xiamiapi SHARED ${SOURCE_FILES})
+add_executable(apitest test/apitest.cpp)
 
 target_link_libraries(xiamiapi ${CPR_LIBRARIES})
+target_link_libraries(apitest xiamiapi)
+target_link_libraries(apitest ${GTEST_LIBRARIES})

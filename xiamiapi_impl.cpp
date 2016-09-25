@@ -148,7 +148,7 @@ namespace xiamiapi
         }
 
         XiamiUserInfo ret(
-                json_doc["data"]["userInfo"]["user_id"].GetString(),
+                static_cast<uint64_t >(std::atoi(json_doc["data"]["userInfo"]["user_id"].GetString())),
                 json_doc["data"]["userInfo"]["nick_name"].GetString(),
                 json_doc["data"]["userInfo"]["avatar"].GetString(),
                 std::to_string(json_doc["data"]["userInfo"]["isMusician"].GetInt()),
@@ -180,11 +180,11 @@ namespace xiamiapi
         for (rapidjson::SizeType i = 0; i < hot_song_data.Size(); i++)
         {
             ret.push_back(XiamiSongInfo(
-                    std::to_string(hot_song_data[i]["song_id"].GetInt64()),
+                    static_cast<uint64_t >(hot_song_data[i]["song_id"].GetInt64()),
                     hot_song_data[i]["song_name"].GetString(),
+                    0,
                     "",
-                    "",
-                    "",
+                    0,
                     "",
                     hot_song_data[i]["singers"].GetString(),
                     "",
@@ -204,10 +204,10 @@ namespace xiamiapi
         for (rapidjson::SizeType i = 0; i < track_list.Size(); i++)
         {
             auto info = XiamiPlaylistInfo(
-                    track_list[i]["songId"].GetString(),
+                    static_cast<uint64_t>(std::atoi(track_list[i]["songId"].GetString())),
                     track_list[i]["subName"].GetString(),
-                    std::to_string(track_list[i]["albumId"].GetInt()),
-                    std::to_string(track_list[i]["artistId"].GetInt()),
+                    track_list[i]["albumId"].GetUint64(),
+                    track_list[i]["artistId"].GetUint64(),
                     track_list[i]["artist"].GetString(),
                     track_list[i]["singers"].GetString(),
                     // track_list[i]["singerIds"],
@@ -304,7 +304,7 @@ namespace xiamiapi
         for (rapidjson::SizeType i = 0; i < collection_data.Size(); i++)
         {
             ret.push_back(XiamiCollectionInfo(
-                    std::to_string(collection_data[i]["list_id"].GetInt64()),
+                    collection_data[i]["list_id"].GetUint64(),
                     collection_data[i]["collect_name"].GetString(),
                     collection_data[i]["logo"].GetString(),
                     collection_data[i]["user_name"].GetString()
@@ -334,11 +334,11 @@ namespace xiamiapi
         for (rapidjson::SizeType i = 0; i < song_doc.Size(); i++)
         {
             ret.push_back(XiamiSongInfo(
-                    std::to_string(song_doc[i]["song_id"].GetInt64()),
+                    song_doc[i]["song_id"].GetUint64(),
                     song_doc[i]["song_name"].GetString(),
-                    std::to_string(song_doc[i]["album_id"].GetInt64()),
+                    song_doc[i]["album_id"].GetUint64(),
                     song_doc[i]["album_name"].GetString(),
-                    std::to_string(song_doc[i]["artist_id"].GetInt64()),
+                    song_doc[i]["artist_id"].GetUint64(),
                     song_doc[i]["artist_name"].GetString(),
                     "",
                     song_doc[i]["listen_file"].GetString(),
@@ -348,18 +348,18 @@ namespace xiamiapi
         return ret;
     }
 
-    XiamiSongInfo XiamiAPI::GetSong_impl(const string &song_id)
+    XiamiSongInfo XiamiAPI::GetSong_impl(const uint64_t &song_id)
     {
         auto api_url = StringUtilities::string_format(
                 "http://api.xiami.com/web?v=2.0&app_key=1&id={song_id}&r=song/detail", {{"song_id", song_id}});
         const rapidjson::Document &json_doc = GetJson(api_url, {{"Referer", "http://h.xiami.com/index.html"}});
         const rapidjson::Value &song_doc = json_doc["data"]["song"];
         return XiamiSongInfo(
-                std::to_string(song_doc["song_id"].GetInt64()),
+                song_doc["song_id"].GetUint64(),
                 song_doc["song_name"].GetString(),
-                std::to_string(song_doc["album_id"].GetInt64()),
+                song_doc["album_id"].GetUint64(),
                 song_doc["album_name"].GetString(),
-                std::to_string(song_doc["artist_id"].GetInt64()),
+                song_doc["artist_id"].GetUint64(),
                 song_doc["artist_name"].GetString(),
                 song_doc["singers"].GetString(),
                 song_doc["listen_file"].GetString(),
@@ -816,7 +816,7 @@ namespace xiamiapi
         }
     }
 
-    HRESULT XiamiAPI::GetSong(const char *song_id, IXiamiSongInfo **out)
+    HRESULT XiamiAPI::GetSong(const uint64_t song_id, IXiamiSongInfo **out)
     {
         try
         {
@@ -996,9 +996,15 @@ namespace xiamiapi
         }
     }
 
-    const char *XiamiPlaylistInfo::get_song_id() const
+    uint64_t XiamiAPI::AddRef()
     {
-        return song_id.c_str();
+        ++m_Ref;
+        return 0;
+    }
+
+    uint64_t XiamiPlaylistInfo::get_song_id() const
+    {
+        return song_id;
     }
 
     const char *XiamiPlaylistInfo::get_sub_name() const
@@ -1006,14 +1012,14 @@ namespace xiamiapi
         return sub_name.c_str();
     }
 
-    const char *XiamiPlaylistInfo::get_album_id() const
+    uint64_t XiamiPlaylistInfo::get_album_id() const
     {
-        return album_id.c_str();
+        return album_id;
     }
 
-    const char *XiamiPlaylistInfo::get_artist_id() const
+    uint64_t XiamiPlaylistInfo::get_artist_id() const
     {
-        return artist_id.c_str();
+        return artist_id;
     }
 
     const char *XiamiPlaylistInfo::get_artist() const
@@ -1122,9 +1128,15 @@ namespace xiamiapi
         return E_NOINTERFACE;
     }
 
-    const char *XiamiUserInfo::get_user_id() const
+    uint64_t XiamiPlaylistInfo::AddRef()
     {
-        return user_id.c_str();
+        ++m_Ref;
+        return 0;
+    }
+
+    uint64_t XiamiUserInfo::get_user_id() const
+    {
+        return user_id;
     }
 
     const char *XiamiUserInfo::get_nick_name() const
@@ -1188,9 +1200,15 @@ namespace xiamiapi
         return E_NOINTERFACE;
     }
 
-    const char *XiamiSongInfo::get_song_id() const
+    uint64_t XiamiUserInfo::AddRef()
     {
-        return song_id.c_str();
+        ++m_Ref;
+        return 0;
+    }
+
+    uint64_t XiamiSongInfo::get_song_id() const
+    {
+        return song_id;
     }
 
     const char *XiamiSongInfo::get_song_name() const
@@ -1198,9 +1216,9 @@ namespace xiamiapi
         return song_name.c_str();
     }
 
-    const char *XiamiSongInfo::get_album_id() const
+    uint64_t XiamiSongInfo::get_album_id() const
     {
-        return album_id.c_str();
+        return album_id;
     }
 
     const char *XiamiSongInfo::get_album_name() const
@@ -1208,9 +1226,9 @@ namespace xiamiapi
         return album_name.c_str();
     }
 
-    const char *XiamiSongInfo::get_artist_id() const
+    uint64_t XiamiSongInfo::get_artist_id() const
     {
-        return artist_id.c_str();
+        return artist_id;
     }
 
     const char *XiamiSongInfo::get_artist_name() const
@@ -1259,10 +1277,16 @@ namespace xiamiapi
         return E_NOINTERFACE;
     }
 
-
-    const char *XiamiCollectionInfo::get_list_id() const
+    uint64_t XiamiSongInfo::AddRef()
     {
-        return list_id.c_str();
+        ++m_Ref;
+        return 0;
+    }
+
+
+    uint64_t XiamiCollectionInfo::get_list_id() const
+    {
+        return list_id;
     }
 
     const char *XiamiCollectionInfo::get_collect_name() const
@@ -1304,6 +1328,12 @@ namespace xiamiapi
         }
         *ppv = nullptr;
         return E_NOINTERFACE;
+    }
+
+    uint64_t XiamiCollectionInfo::AddRef()
+    {
+        ++m_Ref;
+        return 0;
     }
 
     int64_t XiamiArtistInfo::get_artist_id() const
@@ -1352,6 +1382,12 @@ namespace xiamiapi
         return E_NOINTERFACE;
     }
 
+    uint64_t XiamiArtistInfo::AddRef()
+    {
+        ++m_Ref;
+        return 0;
+    }
+
 
     const char *XiamiArtistCategoryInfo::get_artist_class() const
     {
@@ -1394,6 +1430,12 @@ namespace xiamiapi
         return E_NOINTERFACE;
     }
 
+    uint64_t XiamiArtistCategoryInfo::AddRef()
+    {
+        ++m_Ref;
+        return 0;
+    }
+
     const char *XiamiHotSearchKeyInfo::get_key() const
     {
         return key.c_str();
@@ -1428,6 +1470,12 @@ namespace xiamiapi
         }
         *ppv = nullptr;
         return E_NOINTERFACE;
+    }
+
+    uint64_t XiamiHotSearchKeyInfo::AddRef()
+    {
+        ++m_Ref;
+        return 0;
     }
 
     int64_t XiamiRankInfo::get_id() const
@@ -1469,6 +1517,12 @@ namespace xiamiapi
         }
         *ppv = nullptr;
         return E_NOINTERFACE;
+    }
+
+    uint64_t XiamiRankInfo::AddRef()
+    {
+        ++m_Ref;
+        return 0;
     }
 
     bool XiamiCollectionFullInfo::get_is_help()
@@ -1647,6 +1701,12 @@ namespace xiamiapi
         return E_NOINTERFACE;
     }
 
+    uint64_t XiamiCollectionFullInfo::AddRef()
+    {
+        ++m_Ref;
+        return 0;
+    }
+
 
     bool XiamiAlbumInfo::get_is_check() const
     {
@@ -1744,6 +1804,12 @@ namespace xiamiapi
         return E_NOINTERFACE;
     }
 
+    uint64_t XiamiAlbumInfo::AddRef()
+    {
+        ++m_Ref;
+        return 0;
+    }
+
     int64_t XiamiArtistFullInfo::get_artist_id() const
     {
         return artist_id;
@@ -1808,6 +1874,12 @@ namespace xiamiapi
         }
         *ppv = nullptr;
         return E_NOINTERFACE;
+    }
+
+    uint64_t XiamiArtistFullInfo::AddRef()
+    {
+        ++m_Ref;
+        return 0;
     }
 
 }

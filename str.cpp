@@ -48,3 +48,9 @@ HRESULT xiamiapi::Str::QueryInterface(RIID riid, void** ppv)
     return E_NOINTERFACE;
 }
 
+uint64_t xiamiapi::Str::AddRef()
+{
+    ++m_Ref;
+    return 0;
+}
+

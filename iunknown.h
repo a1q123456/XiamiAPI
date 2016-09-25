@@ -5,6 +5,8 @@
 #ifndef XIAMIAPI_IUNKNOWN_H
 #define XIAMIAPI_IUNKNOWN_H
 
+#include <cstdint>
+
 typedef unsigned long HRESULT;
 typedef const char * RIID;
 enum {S_OK = 0, FAIL = 2001, E_INVALIDARG = 1001, E_NOINTERFACE = 1002};
@@ -21,10 +23,10 @@ const char * __uuidof_impl()
 struct IUnknown
 {
     static const char * IID();
-    int64_t m_Ref = 1;
     virtual unsigned long Release() = 0;
     virtual HRESULT QueryInterface(RIID riid, void ** ppv) = 0;
-    virtual unsigned long AddRef();
+    virtual uint64_t AddRef() = 0;
+    virtual ~IUnknown() = 0;
 };
 
 
