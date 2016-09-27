@@ -200,6 +200,10 @@ namespace xiamiapi
 
         vector<XiamiPlaylistInfo> ret;
         const rapidjson::Document &json_doc = GetJson(url, {});
+        if (!(json_doc["message"].IsNull() || (json_doc["message"].IsString() && std::strcmp(json_doc["message"].GetString(), ""))))
+        {
+            throw std::runtime_error("数据获取错误");
+        }
         const rapidjson::Value &track_list = json_doc["data"]["trackList"];
         for (rapidjson::SizeType i = 0; i < track_list.Size(); i++)
         {
