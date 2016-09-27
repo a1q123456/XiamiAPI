@@ -28,7 +28,7 @@ set(SOURCE_FILES
         str.h
         GenericArray.cpp
         GenericArray.h
-        iunknown.cpp keynotfoundexception.cpp keynotfoundexception.h test/apitest.cpp)
+        iunknown.cpp keynotfoundexception.cpp keynotfoundexception.h)
 
 add_library(xiamiapi SHARED ${SOURCE_FILES})
 add_executable(apitest test/apitest.cpp)

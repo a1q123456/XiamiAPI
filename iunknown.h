@@ -23,7 +23,7 @@ const char * __uuidof_impl()
 struct IUnknown
 {
     static const char * IID();
-    virtual unsigned long Release() = 0;
+    virtual uint64_t Release() = 0;
     virtual HRESULT QueryInterface(RIID riid, void ** ppv) = 0;
     virtual uint64_t AddRef() = 0;
     virtual ~IUnknown() = 0;

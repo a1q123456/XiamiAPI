@@ -29,7 +29,7 @@ namespace xiamiapi
         }
 
         template <class T>
-        typename std::enable_if<!std::is_same<T, std::string>::value && !std::is_integral<T>::value || std::is_floating_point<T>::value, std::string>::type
+        typename std::enable_if<((!std::is_same<T, std::string>::value) && (!std::is_integral<T>::value)) || (std::is_floating_point<T>::value), std::string>::type
         to_string(T val)
         {
             return val.to_string();

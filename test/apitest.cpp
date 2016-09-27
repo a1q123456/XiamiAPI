@@ -34,6 +34,14 @@ namespace {
         }
         list->Release();
     }
+    TEST_F(XiamiAPITest, DoesGetRecommendPlaylist) {
+        xiamiapi::IGenericArray * list;
+        api->GetRecommendPlaylist();
+        for (uint64_t i = 0; i < list->length(); ++i)
+        {
+            
+        }
+    })
 
 
 }  // namespace
