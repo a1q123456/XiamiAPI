@@ -13,5 +13,10 @@ namespace xiamiapi
     {
         return new xiamiapi::XiamiAPI();
     }
+
+    void IXiamiAPI::DestroyInstance(IXiamiAPI *api)
+    {
+        delete api;
+    }
 }
 

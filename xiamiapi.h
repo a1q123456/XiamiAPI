@@ -293,6 +293,7 @@ namespace xiamiapi
     struct IXiamiAPI : public IUnknown
     {
         static XIAMIAPI_EXPORT IXiamiAPI * CreateInstance();
+        static XIAMIAPI_EXPORT void DestroyInstance(IXiamiAPI * api);
         virtual HRESULT IsLogin(bool * out) = 0;
 
         virtual HRESULT XiamiLogin(
